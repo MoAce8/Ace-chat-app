@@ -12,12 +12,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      title: 'Ace Message',
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.dark,
+      darkTheme: appTheme(dark: true),
+      theme: appTheme(),
       home: const LoginScreen(),
+    );
+  }
+
+  ThemeData appTheme({bool dark = false}) {
+    return ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.indigo,
+          brightness: dark ? Brightness.dark : Brightness.light),
+      useMaterial3: true,
     );
   }
 }
