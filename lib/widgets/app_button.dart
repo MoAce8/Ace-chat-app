@@ -2,15 +2,14 @@ import 'package:ace_chat_app/shared/constants.dart';
 import 'package:flutter/material.dart';
 
 class AppButton extends StatelessWidget {
-  const AppButton({super.key,
-    this.width = double.infinity,
-    this.background = Colors.blue,
+  const AppButton({
+    super.key,
+    this.background = kPrimaryColor,
     this.isUperCase = false,
     required this.text,
     required this.function,
   });
 
-  final double width;
   final Color background;
   final bool isUperCase;
   final String text;
@@ -18,20 +17,22 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: function,
-      child: Container(
-        decoration: BoxDecoration(
-            color: background, borderRadius: BorderRadius.circular(12)),
-        width: width,
-        height: screenHeight(context) * 0.055,
+    return Center(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: background,
+          padding: const EdgeInsets.all(12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        onPressed: function,
         child: Center(
           child: Text(
             isUperCase ? text.toUpperCase() : text,
-            style: TextStyle(
-                fontSize: screenWidth(context) * 0.046,
-                fontWeight: FontWeight.w500,
-            color: Colors.white),
+            style: const TextStyle(
+              color: Colors.white,
+            ),
           ),
         ),
       ),
