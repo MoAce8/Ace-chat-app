@@ -1,4 +1,5 @@
 import 'package:ace_chat_app/screens/auth/signup_screen.dart';
+import 'package:ace_chat_app/screens/home/tabs_screen/home_screen.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:ace_chat_app/widgets/app_button.dart';
 import 'package:ace_chat_app/widgets/custom_text_field.dart';
@@ -93,7 +94,15 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 16,
               ),
-              AppButton(text: 'Login', function: () {}),
+              AppButton(
+                  text: 'Login',
+                  function: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomeScreen(),
+                        ));
+                  }),
               const SizedBox(
                 height: 6,
               ),
