@@ -1,20 +1,21 @@
-import 'package:ace_chat_app/screens/auth/signup_screen.dart';
+import 'package:ace_chat_app/screens/auth/login_screen.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:ace_chat_app/widgets/app_button.dart';
 import 'package:ace_chat_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
+  var nameController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   bool passwordVisible = true;
 
@@ -28,21 +29,21 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
-                'assets/images/logo.png',
-                height: screenHeight(context) * .2,
-                color: kPrimaryColor,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
               Text(
                 'Welcome',
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
               Text(
-                'Trying to login?',
+                'Create a new account',
                 style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              AppTextFormField(
+                label: 'name',
+                prefix: const Icon(Icons.person),
+                controller: nameController,
               ),
               const SizedBox(
                 height: 16,
@@ -74,26 +75,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(
-                height: 6,
-              ),
-              Row(
-                children: [
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Text(
-                      'Forget password',
-                      style: TextStyle(
-                        fontSize: screenWidth(context) * 0.033,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
                 height: 16,
               ),
-              AppButton(text: 'Login', function: () {}),
+              AppButton(text: 'Sign Up', function: () {}),
               const SizedBox(
                 height: 6,
               ),
@@ -101,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    'Don\'t have an account? ',
+                    'Already have an account? ',
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: screenWidth(context) * 0.033,
@@ -112,11 +96,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const SignUpScreen(),
+                            builder: (context) => const LoginScreen(),
                           ));
                     },
                     child: Text(
-                      'Sign up now',
+                      'Login now',
                       style: TextStyle(
                           color: Colors.blue[200],
                           fontSize: screenWidth(context) * 0.033,
