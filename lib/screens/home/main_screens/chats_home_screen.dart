@@ -8,15 +8,12 @@ class ChatsHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
         title: const Text('Chats'),
       ),
       body: ListView.builder(
-        itemCount: 6,
+        itemCount: 8,
         itemBuilder: (context, index) => const ChatCard(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.message),
       ),
     );
   }

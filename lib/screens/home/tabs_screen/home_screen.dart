@@ -46,6 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
         selectScreen: clickSelectScreen,
         activeScreen: activeScreen,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.message),
+      ),
     );
   }
 }
