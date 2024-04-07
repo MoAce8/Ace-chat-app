@@ -2,8 +2,8 @@ import 'package:ace_chat_app/shared/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class AppTextField extends StatelessWidget {
-  const AppTextField({
+class AppTextFormField extends StatelessWidget {
+  const AppTextFormField({
     Key? key,
     required this.label,
     this.controller,
@@ -14,7 +14,7 @@ class AppTextField extends StatelessWidget {
     this.inputFormatters,
     this.denySpaces = false,
     this.onChanged,
-    this.maxLines=10,
+    this.maxLines=1,
     this.prefix,
   }) : super(key: key);
 
@@ -32,26 +32,35 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       inputFormatters: inputFormatters ?? [],
       controller: controller,
       obscureText: obscure,
       keyboardType: keyboard,
       onChanged: onChanged,
       maxLines: maxLines,
-      minLines: 1,
       style: TextStyle(fontSize: screenWidth(context) * 0.045),
       decoration: InputDecoration(
           hintText: label,
           hintStyle: const TextStyle(color: Colors.grey),
-          contentPadding: const EdgeInsets.all(14),
-          border: InputBorder.none,
+          focusedErrorBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white)),
+          contentPadding: const EdgeInsets.all(16),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
           prefixIcon: prefix,
-          prefixIconColor: Colors.grey,
           suffixIcon: suffix,
-          suffixIconColor: Colors.grey,
+          suffixIconColor: Colors.white,
           suffixIconConstraints:
-          BoxConstraints(maxHeight: screenHeight(context) * 0.04)),
+              BoxConstraints(maxHeight: screenHeight(context) * 0.04)),
+      validator: (value) {
+        value ?? '';
+        if (value!.isEmpty) {
+          return 'field required';
+        }
+        return null;
+      },
     );
   }
 }

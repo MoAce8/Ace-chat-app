@@ -1,7 +1,7 @@
 import 'package:ace_chat_app/screens/auth/login_screen.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:ace_chat_app/widgets/app_button.dart';
-import 'package:ace_chat_app/widgets/custom_text_field.dart';
+import 'package:ace_chat_app/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
