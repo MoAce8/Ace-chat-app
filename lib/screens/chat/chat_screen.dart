@@ -1,4 +1,5 @@
-import 'package:ace_chat_app/screens/chat/widgets/chat_bubble.dart';
+import 'package:ace_chat_app/screens/chat/widgets/messages_list.dart';
+import 'package:ace_chat_app/screens/chat/widgets/no_messages.dart';
 import 'package:ace_chat_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   TextEditingController messageCont = TextEditingController();
+  bool empty = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,15 +43,7 @@ class _ChatScreenState extends State<ChatScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 2),
         child: Column(
           children: [
-            Expanded(
-              child: ListView.builder(
-                reverse: true,
-                itemCount: 10,
-                itemBuilder: (context, index) => index % 2 == 0
-                    ? ChatBubble()
-                    : ChatBubble2(seen: index % 3 == 0 ? true : false),
-              ),
-            ),
+            empty ? const EmptyChat() : const ChatMessages(),
             Row(
               children: [
                 Expanded(
