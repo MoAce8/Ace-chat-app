@@ -40,7 +40,7 @@ class BuildBottomNavBar extends StatelessWidget {
             label: 'Groups',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.people_alt),
+            icon: Icon(Icons.groups),
             label: 'Contacts',
           ),
           BottomNavigationBarItem(
