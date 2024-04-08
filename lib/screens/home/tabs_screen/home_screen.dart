@@ -1,8 +1,8 @@
-import 'package:ace_chat_app/screens/home/main_screens/contacts_home_screen.dart';
-import 'package:ace_chat_app/screens/home/main_screens/groups_home_screen.dart';
-import 'package:ace_chat_app/screens/home/main_screens/settings_screen.dart';
 import 'package:ace_chat_app/screens/home/tabs_screen/bottom_nav.dart';
-import 'package:ace_chat_app/screens/home/main_screens/chats_home_screen.dart';
+import 'package:ace_chat_app/screens/main_screens/chat_home/chats_home_screen.dart';
+import 'package:ace_chat_app/screens/main_screens/contacts_home/contacts_home_screen.dart';
+import 'package:ace_chat_app/screens/main_screens/groups_home/groups_home_screen.dart';
+import 'package:ace_chat_app/screens/main_screens/settings_home/settings_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -45,10 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BuildBottomNavBar(
         selectScreen: clickSelectScreen,
         activeScreen: activeScreen,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.message),
       ),
     );
   }

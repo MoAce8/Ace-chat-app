@@ -1,4 +1,4 @@
-import 'package:ace_chat_app/widgets/chat_bubble.dart';
+import 'package:ace_chat_app/screens/chat/widgets/chat_bubble.dart';
 import 'package:ace_chat_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
