@@ -14,8 +14,9 @@ class AppTextField extends StatelessWidget {
     this.inputFormatters,
     this.denySpaces = false,
     this.onChanged,
-    this.maxLines=10,
+    this.maxLines = 10,
     this.prefix,
+    this.autofocus = false,
   }) : super(key: key);
 
   final String label;
@@ -29,6 +30,7 @@ class AppTextField extends StatelessWidget {
   final bool denySpaces;
   final String? Function(String? st)? validator;
   final int maxLines;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,8 @@ class AppTextField extends StatelessWidget {
       onChanged: onChanged,
       maxLines: maxLines,
       minLines: 1,
-      style: TextStyle(fontSize: screenWidth(context) * 0.045),
+      style: const TextStyle(fontSize: 16),
+      autofocus:autofocus,
       decoration: InputDecoration(
           hintText: label,
           hintStyle: const TextStyle(color: Colors.grey),

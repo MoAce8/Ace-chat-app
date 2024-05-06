@@ -39,7 +39,7 @@ class AppTextFormField extends StatelessWidget {
       keyboardType: keyboard,
       onChanged: onChanged,
       maxLines: maxLines,
-      style: TextStyle(fontSize: screenWidth(context) * 0.045),
+      style: const TextStyle(fontSize: 16),
       decoration: InputDecoration(
           hintText: label,
           hintStyle: const TextStyle(color: Colors.grey),
