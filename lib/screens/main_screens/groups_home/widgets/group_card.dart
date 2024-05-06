@@ -1,4 +1,4 @@
-import 'package:ace_chat_app/screens/chat/chat_screen.dart';
+import 'package:ace_chat_app/screens/group/group_chat_screen.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -12,14 +12,14 @@ class GroupCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ChatScreen(),
+            builder: (context) => const GroupChatScreen(),
           ),
         );
       },
       child: Card(
         child: ListTile(
           leading: const CircleAvatar(),
-          title: const Text('Name'),
+          title: const Text('Group Name'),
           subtitle: const Text('Last message'),
           trailing: Column(
             crossAxisAlignment: CrossAxisAlignment.end,

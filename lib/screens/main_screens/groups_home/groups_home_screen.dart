@@ -1,3 +1,4 @@
+import 'package:ace_chat_app/screens/group/create_group/create_group.dart';
 import 'package:ace_chat_app/screens/main_screens/groups_home/widgets/group_card.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,11 @@ class GroupsHomeScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CreateGroupScreen(),
+              ));
         },
         child: const Icon(Icons.group_add),
       ),
