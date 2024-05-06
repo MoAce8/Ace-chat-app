@@ -1,21 +1,27 @@
 import 'package:ace_chat_app/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
-class CreateGroupScreen extends StatefulWidget {
-  const CreateGroupScreen({Key? key}) : super(key: key);
+class EditGroupScreen extends StatefulWidget {
+  const EditGroupScreen({Key? key}) : super(key: key);
 
   @override
-  State<CreateGroupScreen> createState() => _CreateGroupScreenState();
+  State<EditGroupScreen> createState() => _EditGroupScreenState();
 }
 
-class _CreateGroupScreenState extends State<CreateGroupScreen> {
+class _EditGroupScreenState extends State<EditGroupScreen> {
   TextEditingController gName = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    gName.text = 'Group Name';
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Group'),
+        title: const Text('Edit Group'),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -55,7 +61,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Members'),
+                Text('Add Members'),
                 Text('0'),
               ],
             ),

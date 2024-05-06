@@ -1,4 +1,5 @@
 import 'package:ace_chat_app/screens/chat/widgets/no_messages.dart';
+import 'package:ace_chat_app/screens/group/group_members/group_members_screen.dart';
 import 'package:ace_chat_app/screens/group/widgets/group_messages_list.dart';
 import 'package:ace_chat_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -18,25 +19,34 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            const CircleAvatar(
-              radius: 18,
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Group Name'),
-                Text(
-                  'Mohammed, Tharwat, Ace',
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
-              ],
-            ),
-          ],
+        title: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MembersScreen(),
+                ));
+          },
+          child: Row(
+            children: [
+              const CircleAvatar(
+                radius: 18,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Group Name'),
+                  Text(
+                    'Mohammed, Tharwat, Ace',
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       body: Padding(
