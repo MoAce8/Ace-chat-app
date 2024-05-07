@@ -13,13 +13,22 @@ class NewChatSheet extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            'Enter Friend Email:',
-            style: Theme.of(context).textTheme.bodyLarge,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Enter Friend\'s Email:',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              IconButton.filled(
+                onPressed: () {},
+                icon: const Icon(Icons.qr_code_scanner),
+              )
+            ],
           ),
           const SizedBox(height: 16,),
           const AppTextFormField(
-            label: 'email',
+            label: 'Email',
           ),
           const SizedBox(height: 16,),
           AppButton(
