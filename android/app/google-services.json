@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "534717963284",
+    "project_id": "ace-chatapp",
+    "storage_bucket": "ace-chatapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:534717963284:android:244334c1e945d2cf58db01",
+        "android_client_info": {
+          "package_name": "com.moace.acechat.ace_chat_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDM6rhG9NHSUnlB_CUq7FORLx3Utz2dLWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

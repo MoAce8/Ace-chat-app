@@ -32,79 +32,81 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Center(
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  const CircleAvatar(
-                    radius: 70,
-                  ),
-                  Positioned(
-                    bottom: -10,
-                    right: -10,
-                    child: IconButton.filled(
-                      onPressed: () {},
-                      icon: const Icon(Icons.camera_alt),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Center(
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    const CircleAvatar(
+                      radius: 70,
                     ),
+                    Positioned(
+                      bottom: -10,
+                      right: -10,
+                      child: IconButton.filled(
+                        onPressed: () {},
+                        icon: const Icon(Icons.camera_alt),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: screenHeight(context) * .025,
+              ),
+              ProfileCard(
+                title: 'Name',
+                controller: nameCont,
+                enabled: nameEditable,
+                icon: FontAwesomeIcons.user,
+                trailing: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      nameEditable = !nameEditable;
+                    });
+                  },
+                  icon: Icon(
+                    nameEditable ? Icons.check_circle_outline : Icons.edit,
                   ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: screenHeight(context) * .025,
-            ),
-            ProfileCard(
-              title: 'Name',
-              controller: nameCont,
-              enabled: nameEditable,
-              icon: FontAwesomeIcons.user,
-              trailing: IconButton(
-                onPressed: () {
-                  setState(() {
-                    nameEditable = !nameEditable;
-                  });
-                },
-                icon: Icon(
-                  nameEditable ? Icons.check_circle_outline : Icons.edit,
                 ),
               ),
-            ),
-            ProfileCard(
-              title: 'About',
-              controller: aboutCont,
-              enabled: aboutEditable,
-              icon: FontAwesomeIcons.info,
-              trailing: IconButton(
-                onPressed: () {
-                  setState(() {
-                    aboutEditable = !aboutEditable;
-                  });
-                },
-                icon: Icon(
-                  aboutEditable ? Icons.check_circle_outline : Icons.edit,
+              ProfileCard(
+                title: 'About',
+                controller: aboutCont,
+                enabled: aboutEditable,
+                icon: FontAwesomeIcons.info,
+                trailing: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      aboutEditable = !aboutEditable;
+                    });
+                  },
+                  icon: Icon(
+                    aboutEditable ? Icons.check_circle_outline : Icons.edit,
+                  ),
                 ),
               ),
-            ),
-            ProfileCard(
-              title: 'Email',
-              controller: emailCont,
-              enabled: false,
-              icon: Icons.alternate_email,
-            ),
-            SizedBox(
-              height: screenHeight(context) * .05,
-            ),
-            AppButton(
-              text: 'Save',
-              function: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
+              ProfileCard(
+                title: 'Email',
+                controller: emailCont,
+                enabled: false,
+                icon: Icons.alternate_email,
+              ),
+              SizedBox(
+                height: screenHeight(context) * .05,
+              ),
+              AppButton(
+                text: 'Save',
+                function: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
