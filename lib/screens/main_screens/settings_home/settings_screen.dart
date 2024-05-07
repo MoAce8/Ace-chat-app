@@ -1,7 +1,10 @@
 import 'package:ace_chat_app/screens/main_screens/settings_home/widgets/settings_card.dart';
+import 'package:ace_chat_app/screens/settings/profile/profile_screen.dart';
 import 'package:ace_chat_app/shared/constants.dart';
+import 'package:ace_chat_app/widgets/app_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -31,14 +34,39 @@ class SettingsScreen extends StatelessWidget {
             SizedBox(
               height: screenHeight(context) * .025,
             ),
-            const SettingsCard(
+            SettingsCard(
               title: 'Profile',
               icon: Icons.person,
-              trailing: Icon(Icons.arrow_forward_ios),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileScreen(),
+                    ));
+              },
             ),
-            const SettingsCard(
+            SettingsCard(
               title: 'Theme',
               icon: Icons.color_lens_outlined,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    content: SingleChildScrollView(
+                      child: BlockPicker(
+                        pickerColor: Colors.indigo,
+                        onColorChanged: (value) {},
+                      ),
+                    ),
+                    actions: [
+                      AppButton(text: 'Done', function: (){
+                        Navigator.pop(context);
+                      })
+                    ],
+                  ),
+                );
+              },
             ),
             SettingsCard(
               title: 'Dark Mode',

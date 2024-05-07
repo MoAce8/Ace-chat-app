@@ -32,6 +32,7 @@ class AppButton extends StatelessWidget {
             isUperCase ? text.toUpperCase() : text,
             style: const TextStyle(
               color: Colors.white,
+              fontSize: 16
             ),
           ),
         ),
