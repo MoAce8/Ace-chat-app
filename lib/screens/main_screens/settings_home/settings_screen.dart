@@ -3,6 +3,7 @@ import 'package:ace_chat_app/screens/settings/profile/profile_screen.dart';
 import 'package:ace_chat_app/screens/settings/qr_code/qr_code_screen.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:ace_chat_app/widgets/app_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -88,9 +89,13 @@ class SettingsScreen extends StatelessWidget {
             SizedBox(
               height: screenHeight(context) * .05,
             ),
-            const SettingsCard(
+            SettingsCard(
               title: 'Sign Out',
               trailing: Icon(Icons.logout),
+              onTap: () async {
+                await FirebaseAuth.instance
+                    .signOut();
+              },
             ),
           ],
         ),

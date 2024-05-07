@@ -1,9 +1,11 @@
 import 'package:ace_chat_app/firebase_options.dart';
-import 'package:ace_chat_app/screens/auth/login_screen.dart';
+import 'package:ace_chat_app/screens/auth/login/login_screen.dart';
+import 'package:ace_chat_app/screens/home/tabs_screen/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -23,7 +25,16 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       darkTheme: appTheme(dark: true),
       theme: appTheme(),
-      home: const LoginScreen(),
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.userChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return const HomeScreen();
+          } else {
+            return const LoginScreen();
+          }
+        },
+      ),
     );
   }
 
