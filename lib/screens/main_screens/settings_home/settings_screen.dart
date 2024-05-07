@@ -1,5 +1,6 @@
 import 'package:ace_chat_app/screens/main_screens/settings_home/widgets/settings_card.dart';
 import 'package:ace_chat_app/screens/settings/profile/profile_screen.dart';
+import 'package:ace_chat_app/screens/settings/qr_code/qr_code_screen.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:ace_chat_app/widgets/app_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,7 +28,13 @@ class SettingsScreen extends StatelessWidget {
               ),
               title: const Text('Mohammed Tharwat'),
               trailing: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const QRCodeScreen(),
+                      ));
+                },
                 icon: const Icon(Icons.qr_code),
               ),
             ),
@@ -60,9 +67,11 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ),
                     actions: [
-                      AppButton(text: 'Done', function: (){
-                        Navigator.pop(context);
-                      })
+                      AppButton(
+                          text: 'Done',
+                          function: () {
+                            Navigator.pop(context);
+                          })
                     ],
                   ),
                 );
