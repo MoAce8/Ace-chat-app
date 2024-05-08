@@ -1,3 +1,4 @@
+import 'package:ace_chat_app/firebase/fire_auth.dart';
 import 'package:ace_chat_app/screens/auth/login/login_screen.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:ace_chat_app/widgets/app_button.dart';
@@ -44,7 +45,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 16,
                 ),
                 AppTextFormField(
-                  label: 'name',
+                  label: 'Name',
                   prefix: const Icon(Icons.person),
                   controller: nameController,
                 ),
@@ -52,7 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 16,
                 ),
                 AppTextFormField(
-                  label: 'email',
+                  label: 'Email',
                   keyboard: TextInputType.emailAddress,
                   prefix: const Icon(FontAwesomeIcons.envelope),
                   controller: emailController,
@@ -61,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 16,
                 ),
                 AppTextFormField(
-                  label: 'password',
+                  label: 'Password',
                   keyboard: TextInputType.visiblePassword,
                   controller: passwordController,
                   obscure: passwordVisible,
@@ -82,16 +83,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 AppButton(
                     text: 'Sign Up',
-                    function: () async{
+                    function: () async {
                       if (formKey.currentState!.validate()) {
                         try {
-                          await createNewUser();
+                          await createNewUser(name: nameController.text);
+                          // Navigator.pushReplacement(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => const HomeScreen(),
+                          //     ));
+                          Navigator.pop(context);
                           showSnackBar(context, 'Account created successfully');
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const LoginScreen(),
-                              ));
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'weak-password') {
                             showSnackBar(
@@ -99,15 +101,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           } else if (e.code == 'email-already-in-use') {
                             showSnackBar(context,
                                 'The account already exists for that email.');
-                          }else{
-                            showSnackBar(context,
-                                e.toString());
+                          } else {
+                            showSnackBar(context, e.toString());
                           }
                         } catch (e) {
                           showSnackBar(context, 'There was an error');
                         }
                       }
-
                     }),
                 const SizedBox(
                   height: 6,
@@ -148,8 +148,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Future<void> createNewUser() async {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text, password: passwordController.text);
+  Future<void> createNewUser({required String name}) async {
+    await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text)
+        .then((value) => FireAuth.createUser(name: name));
   }
 }
