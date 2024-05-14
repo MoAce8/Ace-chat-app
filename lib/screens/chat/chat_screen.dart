@@ -48,7 +48,9 @@ class _ChatScreenState extends State<ChatScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 2),
         child: Column(
           children: [
-            empty ? const EmptyChat() : const ChatMessages(),
+            empty
+                ? const EmptyChat()
+                : ChatMessages(roomId: widget.roomId, user: widget.user),
             Row(
               children: [
                 Expanded(
@@ -72,11 +74,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 IconButton.filled(
                   onPressed: () {
                     if (messageCont.text.isNotEmpty) {
-                      FireData().sendMessage(
+                      FireData()
+                          .sendMessage(
                         userId: widget.user.id,
                         msg: messageCont.text,
                         roomId: widget.roomId,
-                      ).then((value) {
+                      )
+                          .then((value) {
                         messageCont.clear();
                       });
                     }

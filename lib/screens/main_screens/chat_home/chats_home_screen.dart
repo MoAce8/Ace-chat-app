@@ -1,6 +1,7 @@
 import 'package:ace_chat_app/models/room_model.dart';
 import 'package:ace_chat_app/screens/main_screens/chat_home/new_chat_sheet.dart';
 import 'package:ace_chat_app/screens/main_screens/chat_home/widgets/chat_card.dart';
+import 'package:ace_chat_app/widgets/loading_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -34,9 +35,7 @@ class ChatsHomeScreen extends StatelessWidget {
                 itemBuilder: (context, index) => ChatCard(room: rooms[index]),
               );
             } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const LoadingIndicator();
             }
           }),
       floatingActionButton: FloatingActionButton(

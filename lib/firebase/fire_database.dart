@@ -17,28 +17,32 @@ class FireData {
         .get();
     if (friend.docs.isNotEmpty) {
       String friendId = friend.docs.first.id;
-      List<String> members = [myId, friendId]..sort(
-          (a, b) => a.compareTo(b),
-        );
+      if (friendId != myId) {
+        List<String> members = [myId, friendId]..sort(
+            (a, b) => a.compareTo(b),
+          );
 
-      QuerySnapshot roomExist = await fireStore
-          .collection('rooms')
-          .where('members', isEqualTo: members)
-          .get();
-
-      if (roomExist.docs.isEmpty) {
-        RoomModel newRoom = RoomModel(
-          id: members.toString(),
-          members: members,
-          lastMessage: 'lastMessage',
-          lastMessageTime: DateTime.now().toString(),
-          createdAt: DateTime.now().toString(),
-        );
-
-        await fireStore
+        QuerySnapshot roomExist = await fireStore
             .collection('rooms')
-            .doc(members.toString())
-            .set(newRoom.toJson());
+            .where('members', isEqualTo: members)
+            .get();
+
+        if (roomExist.docs.isEmpty) {
+          RoomModel newRoom = RoomModel(
+            id: members.toString(),
+            members: members,
+            lastMessage: 'lastMessage',
+            lastMessageTime: DateTime.now().toString(),
+            createdAt: DateTime.now().toString(),
+          );
+
+          await fireStore
+              .collection('rooms')
+              .doc(members.toString())
+              .set(newRoom.toJson());
+        }
+      }else{
+        showSnackBar(context, 'Why do you wanna text yourself??');
       }
     } else {
       showSnackBar(context, 'User not found');

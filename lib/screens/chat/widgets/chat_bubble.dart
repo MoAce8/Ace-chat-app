@@ -1,8 +1,10 @@
+import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:flutter/material.dart';
 
 class ChatBubble extends StatelessWidget {
-  const ChatBubble({Key? key,}) : super(key: key);
+  const ChatBubble({Key? key, required this.msg,}) : super(key: key);
+  final MessageModel msg;
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +25,12 @@ class ChatBubble extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
              Text(
-              'messssssssssssssssssaaaaaaaaaaaageeeeeeeeeee',
+              msg.msg,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             const SizedBox(height: 5,),
             Text(
-              '13:07',
+              msg.createdAt,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -39,7 +41,8 @@ class ChatBubble extends StatelessWidget {
 }
 
 class ChatBubble2 extends StatelessWidget {
-  const ChatBubble2({Key? key, required this.seen,}) : super(key: key);
+  const ChatBubble2({Key? key, required this.msg, required this.seen,}) : super(key: key);
+  final MessageModel msg;
   final bool seen;
 
   @override
@@ -60,7 +63,7 @@ class ChatBubble2 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
              Text(
-              'grdshrsdhrsdgsgsegsg',
+              msg.msg,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             const SizedBox(height: 5,),
