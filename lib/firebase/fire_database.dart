@@ -1,8 +1,10 @@
+import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/models/room_model.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class FireData {
   final String myId = FirebaseAuth.instance.currentUser!.uid;
@@ -41,5 +43,28 @@ class FireData {
     } else {
       showSnackBar(context, 'User not found');
     }
+  }
+
+  Future sendMessage({
+    required String userId,
+    required String msg,
+    required String roomId,
+  }) async {
+    String msgId = const Uuid().v1();
+    MessageModel newMessage = MessageModel(
+      id: msgId,
+      fromId: myId,
+      toId: userId,
+      msg: msg,
+      createdAt: DateTime.now().toString(),
+      type: 'text',
+      read: true,
+    );
+    await fireStore
+        .collection('rooms')
+        .doc(roomId)
+        .collection('messages')
+        .doc(msgId)
+        .set(newMessage.toJson());
   }
 }
