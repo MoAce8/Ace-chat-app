@@ -13,6 +13,7 @@ class NewChatSheet extends StatefulWidget {
 
 class _NewChatSheetState extends State<NewChatSheet> {
   TextEditingController emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -40,17 +41,22 @@ class _NewChatSheetState extends State<NewChatSheet> {
                 )
               ],
             ),
-            const SizedBox(height: 16,),
-             AppTextFormField(
+            const SizedBox(
+              height: 16,
+            ),
+            AppTextFormField(
               label: 'Email',
               controller: emailController,
             ),
-            const SizedBox(height: 16,),
+            const SizedBox(
+              height: 16,
+            ),
             AppButton(
               text: 'Start Chat',
-              function: () {
+              function: () async {
                 if (emailController.text.isNotEmpty) {
-                  FireData().createRoom(context,email: emailController.text);
+                  await FireData()
+                      .createRoom(context, email: emailController.text);
                   Navigator.pop(context);
                 }
               },

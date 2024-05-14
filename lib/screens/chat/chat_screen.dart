@@ -1,10 +1,13 @@
+import 'package:ace_chat_app/models/user_model.dart';
 import 'package:ace_chat_app/screens/chat/widgets/messages_list.dart';
 import 'package:ace_chat_app/screens/chat/widgets/no_messages.dart';
 import 'package:ace_chat_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+  const ChatScreen({Key? key, required this.roomId, required this.user}) : super(key: key);
+  final String roomId;
+  final UserModel user;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -29,9 +32,9 @@ class _ChatScreenState extends State<ChatScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Mohammed'),
+                 Text(widget.user.name),
                 Text(
-                  'Last seen 12:30',
+                  'Last seen ${widget.user.lastSeen}',
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ],
