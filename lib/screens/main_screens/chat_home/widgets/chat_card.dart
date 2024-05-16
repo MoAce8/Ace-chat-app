@@ -43,7 +43,9 @@ class ChatCard extends StatelessWidget {
                   trailing: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(room.lastMessageTime),
+                      Text(DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(room.lastMessageTime))
+                          .toString(),),
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: const BoxDecoration(

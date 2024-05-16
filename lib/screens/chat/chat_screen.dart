@@ -17,6 +17,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   TextEditingController messageCont = TextEditingController();
+  ScrollController scroller = ScrollController();
   bool empty = false;
 
   @override
@@ -36,7 +37,9 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Text(widget.user.name),
                 Text(
-                  'Last seen ${widget.user.lastSeen}',
+                  'Last seen ${DateTime.fromMillisecondsSinceEpoch(
+                      int.parse(widget.user.lastSeen))
+                      .toString()}',
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ],
@@ -50,7 +53,11 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             empty
                 ? const EmptyChat()
-                : ChatMessages(roomId: widget.roomId, user: widget.user),
+                : ChatMessages(
+                    roomId: widget.roomId,
+                    user: widget.user,
+                    scroller: scroller,
+                  ),
             Row(
               children: [
                 Expanded(
@@ -73,11 +80,12 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 IconButton.filled(
                   onPressed: () {
-                    if (messageCont.text.isNotEmpty) {
+                    if (messageCont.text.trim().isNotEmpty) {
+                      scroller.jumpTo(0);
                       FireData()
                           .sendMessage(
                         userId: widget.user.id,
-                        msg: messageCont.text,
+                        msg: messageCont.text.trim(),
                         roomId: widget.roomId,
                       )
                           .then((value) {

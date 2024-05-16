@@ -32,8 +32,8 @@ class FireData {
             id: members.toString(),
             members: members,
             lastMessage: 'lastMessage',
-            lastMessageTime: DateTime.now().toString(),
-            createdAt: DateTime.now().toString(),
+            lastMessageTime: DateTime.now().millisecondsSinceEpoch.toString(),
+            createdAt: DateTime.now().millisecondsSinceEpoch.toString(),
           );
 
           await fireStore
@@ -60,7 +60,7 @@ class FireData {
       fromId: myId,
       toId: userId,
       msg: msg,
-      createdAt: DateTime.now().toString(),
+      createdAt: DateTime.now().millisecondsSinceEpoch.toString(),
       type: 'text',
       read: true,
     );

@@ -6,10 +6,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ChatMessages extends StatelessWidget {
-  const ChatMessages({Key? key, required this.roomId, required this.user})
+  const ChatMessages(
+      {Key? key,
+      required this.roomId,
+      required this.user,
+      required this.scroller})
       : super(key: key);
   final String roomId;
   final UserModel user;
+  final ScrollController scroller;
 
   @override
   Widget build(BuildContext context) {
@@ -24,17 +29,21 @@ class ChatMessages extends StatelessWidget {
             if (snapshot.hasData) {
               List<MessageModel> messages = snapshot.data!.docs
                   .map((e) => MessageModel.fromJson(e.data()))
-                  .toList();
+                  .toList()
+                ..sort(
+                  (a, b) => b.createdAt.compareTo(a.createdAt),
+                );
               return ListView.builder(
                 reverse: true,
+                controller: scroller,
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) => index % 2 == 0
                     ? ChatBubble(
                         msg: messages[index],
                       )
-                    : ChatBubble2(
+                    : ChatBubble(
                         msg: messages[index],
-                        seen: index % 3 == 0 ? true : false),
+                      ),
               );
             } else {
               return const LoadingIndicator();

@@ -15,7 +15,7 @@ class FireAuth {
       email: currentUser.email!,
       image: '',
       about: 'Hey, I\'m using Ace chat',
-      lastSeen: DateTime.now().toString(),
+      lastSeen: DateTime.now().millisecondsSinceEpoch.toString(),
       pushToken: '',
       online: false,
     );
