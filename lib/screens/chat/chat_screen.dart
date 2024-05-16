@@ -1,8 +1,11 @@
 import 'package:ace_chat_app/firebase/fire_database.dart';
+import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/models/user_model.dart';
 import 'package:ace_chat_app/screens/chat/widgets/messages_list.dart';
 import 'package:ace_chat_app/screens/chat/widgets/no_messages.dart';
 import 'package:ace_chat_app/widgets/custom_text_field.dart';
+import 'package:ace_chat_app/widgets/loading_indicator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -37,9 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Text(widget.user.name),
                 Text(
-                  'Last seen ${DateTime.fromMillisecondsSinceEpoch(
-                      int.parse(widget.user.lastSeen))
-                      .toString()}',
+                  'Last seen ${DateTime.fromMillisecondsSinceEpoch(int.parse(widget.user.lastSeen)).toString()}',
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ],
@@ -51,13 +52,27 @@ class _ChatScreenState extends State<ChatScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 2),
         child: Column(
           children: [
-            empty
-                ? const EmptyChat()
-                : ChatMessages(
-                    roomId: widget.roomId,
-                    user: widget.user,
-                    scroller: scroller,
-                  ),
+            StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('rooms')
+                    .doc(widget.roomId)
+                    .collection('messages')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<MessageModel> messages = snapshot.data!.docs
+                        .map((e) => MessageModel.fromJson(e.data()))
+                        .toList();
+                    return messages.isNotEmpty
+                        ? ChatMessages(
+                            roomId: widget.roomId,
+                            scroller: scroller,
+                          )
+                        : EmptyChat(roomId: widget.roomId,user: widget.user,);
+                  } else {
+                    return const LoadingIndicator();
+                  }
+                }),
             Row(
               children: [
                 Expanded(

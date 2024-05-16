@@ -1,5 +1,4 @@
 import 'package:ace_chat_app/models/message_model.dart';
-import 'package:ace_chat_app/models/user_model.dart';
 import 'package:ace_chat_app/screens/chat/widgets/chat_bubble.dart';
 import 'package:ace_chat_app/widgets/loading_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,11 +8,9 @@ class ChatMessages extends StatelessWidget {
   const ChatMessages(
       {Key? key,
       required this.roomId,
-      required this.user,
       required this.scroller})
       : super(key: key);
   final String roomId;
-  final UserModel user;
   final ScrollController scroller;
 
   @override

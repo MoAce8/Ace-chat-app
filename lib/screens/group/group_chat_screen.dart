@@ -1,4 +1,3 @@
-import 'package:ace_chat_app/screens/chat/widgets/no_messages.dart';
 import 'package:ace_chat_app/screens/group/group_members/group_members_screen.dart';
 import 'package:ace_chat_app/screens/group/widgets/group_messages_list.dart';
 import 'package:ace_chat_app/widgets/custom_text_field.dart';
@@ -53,7 +52,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 2),
         child: Column(
           children: [
-            empty ? const EmptyChat() : const GroupChatMessages(),
+            const GroupChatMessages(),
             Row(
               children: [
                 Expanded(
