@@ -1,5 +1,7 @@
 import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/shared/constants.dart';
+import 'package:ace_chat_app/widgets/loading_indicator.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -33,10 +35,15 @@ class ChatBubble extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(
-              msg.msg,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
+            msg.type == 'text'
+                ? Text(
+                    msg.msg,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  )
+                : CachedNetworkImage(
+                    imageUrl: msg.msg,
+                    placeholder: (context, url) => const LoadingIndicator(),
+                  ),
             const SizedBox(
               height: 5,
             ),

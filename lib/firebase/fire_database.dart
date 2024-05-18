@@ -41,7 +41,7 @@ class FireData {
               .doc(members.toString())
               .set(newRoom.toJson());
         }
-      }else{
+      } else {
         showSnackBar(context, 'Why do you wanna text yourself??');
       }
     } else {
@@ -53,6 +53,7 @@ class FireData {
     required String userId,
     required String msg,
     required String roomId,
+    String? type,
   }) async {
     String msgId = const Uuid().v1();
     MessageModel newMessage = MessageModel(
@@ -61,7 +62,7 @@ class FireData {
       toId: userId,
       msg: msg,
       createdAt: DateTime.now().millisecondsSinceEpoch.toString(),
-      type: 'text',
+      type: type ?? 'text',
       read: true,
     );
     await fireStore

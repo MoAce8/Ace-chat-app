@@ -3,6 +3,7 @@ import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/models/user_model.dart';
 import 'package:ace_chat_app/screens/chat/widgets/messages_list.dart';
 import 'package:ace_chat_app/screens/chat/widgets/no_messages.dart';
+import 'package:ace_chat_app/shared/image_picker.dart';
 import 'package:ace_chat_app/widgets/custom_text_field.dart';
 import 'package:ace_chat_app/widgets/loading_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -68,7 +69,10 @@ class _ChatScreenState extends State<ChatScreen> {
                             roomId: widget.roomId,
                             scroller: scroller,
                           )
-                        : EmptyChat(roomId: widget.roomId,user: widget.user,);
+                        : EmptyChat(
+                            roomId: widget.roomId,
+                            user: widget.user,
+                          );
                   } else {
                     return const LoadingIndicator();
                   }
@@ -83,7 +87,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       label: 'Message',
                       controller: messageCont,
                       suffix: IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await pickFromGallery(
+                              roomId: widget.roomId, userId: widget.user.id);
+                        },
                         icon: const Icon(Icons.attach_file),
                       ),
                       prefix: IconButton(
