@@ -1,3 +1,4 @@
+import 'package:ace_chat_app/firebase/fire_database.dart';
 import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:ace_chat_app/widgets/loading_indicator.dart';
@@ -5,16 +6,31 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class ChatBubble extends StatelessWidget {
+class ChatBubble extends StatefulWidget {
   const ChatBubble({
     Key? key,
     required this.msg,
+    required this.roomId,
   }) : super(key: key);
   final MessageModel msg;
+  final String roomId;
+
+  @override
+  State<ChatBubble> createState() => _ChatBubbleState();
+}
+
+class _ChatBubbleState extends State<ChatBubble> {
+  @override
+  void initState() {
+    if(widget.msg.toId == FirebaseAuth.instance.currentUser!.uid){
+      FireData().readMessages(roomId: widget.roomId, msgId: widget.msg.id);
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    bool isMe = msg.fromId == FirebaseAuth.instance.currentUser!.uid;
+    bool isMe = widget.msg.fromId == FirebaseAuth.instance.currentUser!.uid;
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -35,13 +51,13 @@ class ChatBubble extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            msg.type == 'text'
+            widget.msg.type == 'text'
                 ? Text(
-                    msg.msg,
+                    widget.msg.msg,
                     style: Theme.of(context).textTheme.bodyLarge,
                   )
                 : CachedNetworkImage(
-                    imageUrl: msg.msg,
+                    imageUrl: widget.msg.msg,
                     placeholder: (context, url) => const LoadingIndicator(),
                   ),
             const SizedBox(
@@ -54,7 +70,7 @@ class ChatBubble extends StatelessWidget {
                     children: [
                       Text(
                         DateTime.fromMillisecondsSinceEpoch(
-                                int.parse(msg.createdAt))
+                                int.parse(widget.msg.createdAt))
                             .toString(),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
@@ -62,9 +78,9 @@ class ChatBubble extends StatelessWidget {
                         width: 4,
                       ),
                       Icon(
-                        msg.read
-                            ? Icons.check_circle_outline
-                            : Icons.check_circle,
+                        widget.msg.read
+                            ? Icons.check_circle
+                            : Icons.check_circle_outline,
                         size: 18,
                       )
                     ],

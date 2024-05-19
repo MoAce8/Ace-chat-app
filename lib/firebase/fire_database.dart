@@ -63,7 +63,7 @@ class FireData {
       msg: msg,
       createdAt: DateTime.now().millisecondsSinceEpoch.toString(),
       type: type ?? 'text',
-      read: true,
+      read: false,
     );
     await fireStore
         .collection('rooms')
@@ -71,5 +71,22 @@ class FireData {
         .collection('messages')
         .doc(msgId)
         .set(newMessage.toJson());
+
+    await fireStore.collection('rooms').doc(roomId).update({
+      'last_message': type ?? msg,
+      'last_message_time': DateTime.now().millisecondsSinceEpoch.toString(),
+    });
+  }
+
+  Future readMessages({
+    required String roomId,
+    required String msgId,
+  }) async {
+    await fireStore
+        .collection('rooms')
+        .doc(roomId)
+        .collection('messages')
+        .doc(msgId)
+        .update({'read': true});
   }
 }

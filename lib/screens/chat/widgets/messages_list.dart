@@ -5,10 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ChatMessages extends StatelessWidget {
-  const ChatMessages(
-      {Key? key,
-      required this.roomId,
-      required this.scroller})
+  const ChatMessages({Key? key, required this.roomId, required this.scroller})
       : super(key: key);
   final String roomId;
   final ScrollController scroller;
@@ -36,9 +33,11 @@ class ChatMessages extends StatelessWidget {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) => index % 2 == 0
                     ? ChatBubble(
+                        roomId: roomId,
                         msg: messages[index],
                       )
                     : ChatBubble(
+                        roomId: roomId,
                         msg: messages[index],
                       ),
               );
