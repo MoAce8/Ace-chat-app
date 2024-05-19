@@ -1,3 +1,4 @@
+import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/models/room_model.dart';
 import 'package:ace_chat_app/models/user_model.dart';
 import 'package:ace_chat_app/screens/chat/chat_screen.dart';
@@ -43,17 +44,38 @@ class ChatCard extends StatelessWidget {
                   trailing: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(DateTime.fromMillisecondsSinceEpoch(
-                          int.parse(room.lastMessageTime))
-                          .toString(),),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: kPrimaryColor,
-                        ),
-                        child: const Text('3'),
+                      Text(
+                        DateTime.fromMillisecondsSinceEpoch(
+                                int.parse(room.lastMessageTime))
+                            .toString(),
                       ),
+                      StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('rooms')
+                              .doc(room.id)
+                              .collection('messages')
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            final unreadList = snapshot.data?.docs
+                                .map((e) => MessageModel.fromJson(e.data()))
+                                .where((element) => !element.read)
+                                .where((element) =>
+                                    element.toId ==
+                                    FirebaseAuth.instance.currentUser!.uid)
+                                .toList();
+                            if (snapshot.hasData && unreadList!.isNotEmpty) {
+                              return Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: kPrimaryColor,
+                                ),
+                                child: Text(unreadList.length.toString()),
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                          }),
                     ],
                   ),
                 ),
