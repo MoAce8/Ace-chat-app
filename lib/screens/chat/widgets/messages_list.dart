@@ -4,11 +4,23 @@ import 'package:ace_chat_app/widgets/loading_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ChatMessages extends StatelessWidget {
-  const ChatMessages({Key? key, required this.roomId, required this.scroller})
-      : super(key: key);
+class ChatMessages extends StatefulWidget {
+  const ChatMessages({
+    Key? key,
+    required this.roomId,
+    required this.scroller,
+    required this.callback,
+  }) : super(key: key);
   final String roomId;
   final ScrollController scroller;
+  final Function(List list) callback;
+
+  @override
+  State<ChatMessages> createState() => _ChatMessagesState();
+}
+
+class _ChatMessagesState extends State<ChatMessages> {
+  List selectedMsg = [];
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +28,7 @@ class ChatMessages extends StatelessWidget {
       child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('rooms')
-              .doc(roomId)
+              .doc(widget.roomId)
               .collection('messages')
               .snapshots(),
           builder: (context, snapshot) {
@@ -29,17 +41,33 @@ class ChatMessages extends StatelessWidget {
                 );
               return ListView.builder(
                 reverse: true,
-                controller: scroller,
+                controller: widget.scroller,
                 itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) => index % 2 == 0
-                    ? ChatBubble(
-                        roomId: roomId,
-                        msg: messages[index],
-                      )
-                    : ChatBubble(
-                        roomId: roomId,
-                        msg: messages[index],
-                      ),
+                itemBuilder: (context, index) => GestureDetector(
+                  onLongPress: () {
+                    setState(() {
+                      selectedMsg.contains(messages[index].id)
+                          ? selectedMsg.remove(messages[index].id)
+                          : selectedMsg.add(messages[index].id);
+                    });
+                    widget.callback(selectedMsg);
+                  },
+                  onTap: () {
+                    setState(() {
+                      if (selectedMsg.isNotEmpty) {
+                        selectedMsg.contains(messages[index].id)
+                            ? selectedMsg.remove(messages[index].id)
+                            : selectedMsg.add(messages[index].id);
+                      }
+                    });
+                    widget.callback(selectedMsg);
+                  },
+                  child: ChatBubble(
+                    roomId: widget.roomId,
+                    msg: messages[index],
+                    selected: selectedMsg.contains(messages[index].id),
+                  ),
+                ),
               );
             } else {
               return const LoadingIndicator();

@@ -7,6 +7,7 @@ import 'package:ace_chat_app/shared/image_picker.dart';
 import 'package:ace_chat_app/widgets/custom_text_field.dart';
 import 'package:ace_chat_app/widgets/loading_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -23,6 +24,7 @@ class _ChatScreenState extends State<ChatScreen> {
   TextEditingController messageCont = TextEditingController();
   ScrollController scroller = ScrollController();
   bool empty = false;
+  List selectedMsg = [];
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +43,32 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Text(widget.user.name),
                 Text(
-                  'Last seen ${DateTime.fromMillisecondsSinceEpoch(int.parse(widget.user.lastSeen)).toString()}',
+                  'Last seen '
+                      // '${DateTime.fromMillisecondsSinceEpoch(int.parse(widget.user.lastSeen)).toString()}'
+                  ,
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ],
             ),
           ],
         ),
+        actions: [
+          selectedMsg.isNotEmpty
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(CupertinoIcons.trash),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.copy),
+                    ),
+                  ],
+                )
+              : const SizedBox()
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -68,6 +89,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         ? ChatMessages(
                             roomId: widget.roomId,
                             scroller: scroller,
+                            callback: (list) => setState(() {
+                              selectedMsg = list;
+                            }),
                           )
                         : EmptyChat(
                             roomId: widget.roomId,
