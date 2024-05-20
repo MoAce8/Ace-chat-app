@@ -2,6 +2,7 @@ import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/screens/chat/widgets/chat_bubble.dart';
 import 'package:ace_chat_app/widgets/loading_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChatMessages extends StatefulWidget {
@@ -13,7 +14,7 @@ class ChatMessages extends StatefulWidget {
   }) : super(key: key);
   final String roomId;
   final ScrollController scroller;
-  final Function(List list) callback;
+  final Function(List selected, List received) callback;
 
   @override
   State<ChatMessages> createState() => _ChatMessagesState();
@@ -21,6 +22,8 @@ class ChatMessages extends StatefulWidget {
 
 class _ChatMessagesState extends State<ChatMessages> {
   List selectedMsg = [];
+  List userSelectedMsg = [];
+  String uid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +52,14 @@ class _ChatMessagesState extends State<ChatMessages> {
                       selectedMsg.contains(messages[index].id)
                           ? selectedMsg.remove(messages[index].id)
                           : selectedMsg.add(messages[index].id);
+
+                      if (messages[index].toId == uid) {
+                        userSelectedMsg.contains(messages[index].id)
+                            ? userSelectedMsg.remove(messages[index].id)
+                            : userSelectedMsg.add(messages[index].id);
+                      }
                     });
-                    widget.callback(selectedMsg);
+                    widget.callback(selectedMsg, userSelectedMsg);
                   },
                   onTap: () {
                     setState(() {
@@ -58,9 +67,15 @@ class _ChatMessagesState extends State<ChatMessages> {
                         selectedMsg.contains(messages[index].id)
                             ? selectedMsg.remove(messages[index].id)
                             : selectedMsg.add(messages[index].id);
+
+                        if (messages[index].toId == uid) {
+                          userSelectedMsg.contains(messages[index].id)
+                              ? userSelectedMsg.remove(messages[index].id)
+                              : userSelectedMsg.add(messages[index].id);
+                        }
                       }
                     });
-                    widget.callback(selectedMsg);
+                    widget.callback(selectedMsg, userSelectedMsg);
                   },
                   child: ChatBubble(
                     roomId: widget.roomId,

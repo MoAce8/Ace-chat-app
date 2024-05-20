@@ -25,6 +25,7 @@ class _ChatScreenState extends State<ChatScreen> {
   ScrollController scroller = ScrollController();
   bool empty = false;
   List selectedMsg = [];
+  bool showDelete = true;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Text(widget.user.name),
                 Text(
                   'Last seen '
-                      // '${DateTime.fromMillisecondsSinceEpoch(int.parse(widget.user.lastSeen)).toString()}'
+                  // '${DateTime.fromMillisecondsSinceEpoch(int.parse(widget.user.lastSeen)).toString()}'
                   ,
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
@@ -57,10 +58,20 @@ class _ChatScreenState extends State<ChatScreen> {
               ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(CupertinoIcons.trash),
-                    ),
+                    showDelete
+                        ? IconButton(
+                            onPressed: () {
+                              FireData()
+                                  .deleteMessage(
+                                      roomId: widget.roomId,
+                                      messages: selectedMsg)
+                                  .then((value) => setState(() {
+                                        selectedMsg.clear();
+                                      }));
+                            },
+                            icon: const Icon(CupertinoIcons.trash),
+                          )
+                        : const SizedBox(),
                     IconButton(
                       onPressed: () {},
                       icon: const Icon(Icons.copy),
@@ -89,8 +100,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         ? ChatMessages(
                             roomId: widget.roomId,
                             scroller: scroller,
-                            callback: (list) => setState(() {
-                              selectedMsg = list;
+                            callback: (selected, received) => setState(() {
+                              selectedMsg = selected;
+                              showDelete = received.isEmpty;
                             }),
                           )
                         : EmptyChat(

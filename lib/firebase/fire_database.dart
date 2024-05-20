@@ -89,4 +89,18 @@ class FireData {
         .doc(msgId)
         .update({'read': true});
   }
+
+  Future deleteMessage({
+    required String roomId,
+    required List messages,
+  }) async {
+    for (var msg in messages) {
+      await fireStore
+          .collection('rooms')
+          .doc(roomId)
+          .collection('messages')
+          .doc(msg)
+          .delete();
+    }
+  }
 }
