@@ -60,6 +60,7 @@ class _NewChatSheetState extends State<NewChatSheet> {
                       .then(
                         (value) => Navigator.pop(context),
                       );
+                  FireData().addContact(email: emailController.text);
                 }
               },
             ),

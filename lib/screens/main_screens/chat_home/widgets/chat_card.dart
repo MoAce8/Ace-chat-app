@@ -13,9 +13,12 @@ class ChatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String userId = room.members
+    List members = room.members
         .where((element) => element != FirebaseAuth.instance.currentUser!.uid)
-        .first;
+        .toList();
+    String userId = members.isEmpty
+        ? FirebaseAuth.instance.currentUser!.uid
+        : members.first;
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('users')
@@ -39,7 +42,10 @@ class ChatCard extends StatelessWidget {
               child: Card(
                 child: ListTile(
                   leading: const CircleAvatar(),
-                  title: Text(user.name),
+                  title: Text(
+                    user.id!=FirebaseAuth.instance.currentUser!.uid?
+                    user.name:'(You)',
+                  ),
                   subtitle: Text(room.lastMessage),
                   trailing: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,

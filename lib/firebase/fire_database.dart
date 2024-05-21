@@ -17,7 +17,7 @@ class FireData {
         .get();
     if (friend.docs.isNotEmpty) {
       String friendId = friend.docs.first.id;
-      if (friendId != myId) {
+
         List<String> members = [myId, friendId]..sort(
             (a, b) => a.compareTo(b),
           );
@@ -41,27 +41,20 @@ class FireData {
               .doc(members.toString())
               .set(newRoom.toJson());
         }
-      } else {
-        showSnackBar(context, 'Why do you wanna text yourself??');
-      }
     } else {
       showSnackBar(context, 'User not found');
     }
   }
 
-  Future addContact(BuildContext context, {required String email}) async {
+  Future addContact({required String email}) async {
     QuerySnapshot friend = await fireStore
         .collection('users')
         .where('email', isEqualTo: email)
         .get();
     if (friend.docs.isNotEmpty) {
-      if (friend.docs.first.id != myId) {
         fireStore.collection('users').doc(myId).update({
           'contacts': FieldValue.arrayUnion([friend.docs.first.id])
         });
-      }else{
-        showSnackBar(context, 'Why do you wanna add yourself??');
-      }
     }
   }
 

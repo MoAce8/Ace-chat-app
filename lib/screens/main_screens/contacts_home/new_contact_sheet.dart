@@ -56,7 +56,7 @@ class _NewContactSheetState extends State<NewContactSheet> {
               function: () {
                 if (emailController.text.isNotEmpty) {
                   FireData()
-                      .addContact(context, email: emailController.text)
+                      .addContact(email: emailController.text)
                       .then((value) => Navigator.pop(context));
                 }
               },
