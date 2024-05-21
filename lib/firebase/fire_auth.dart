@@ -18,6 +18,7 @@ class FireAuth {
       lastSeen: DateTime.now().millisecondsSinceEpoch.toString(),
       pushToken: '',
       online: false,
+      contacts: [],
     );
     await fireStore
         .collection('users')

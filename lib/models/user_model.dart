@@ -7,6 +7,7 @@ class UserModel {
   final String lastSeen;
   final String pushToken;
   final bool online;
+  final List contacts;
 
   UserModel({
     required this.id,
@@ -17,6 +18,7 @@ class UserModel {
     required this.lastSeen,
     required this.pushToken,
     required this.online,
+    required this.contacts,
   });
 
   factory UserModel.fromJson(json) {
@@ -29,6 +31,7 @@ class UserModel {
       lastSeen: json['last_seen'],
       pushToken: json['push_token'],
       online: json['online'],
+      contacts: json['contacts'],
     );
   }
 
@@ -42,6 +45,7 @@ class UserModel {
       'last_seen':lastSeen,
       'push_token':pushToken,
       'online':online,
+      'contacts':contacts,
     };
   }
 }

@@ -55,11 +55,12 @@ class _ContactsHomeScreenState extends State<ContactsHomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
+            isScrollControlled: true,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                )),
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
+            )),
             context: context,
             builder: (context) => const NewContactSheet(),
           );

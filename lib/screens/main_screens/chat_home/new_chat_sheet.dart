@@ -53,11 +53,13 @@ class _NewChatSheetState extends State<NewChatSheet> {
             ),
             AppButton(
               text: 'Start Chat',
-              function: () async {
+              function: () {
                 if (emailController.text.isNotEmpty) {
-                  await FireData()
-                      .createRoom(context, email: emailController.text);
-                  Navigator.pop(context);
+                  FireData()
+                      .createRoom(context, email: emailController.text)
+                      .then(
+                        (value) => Navigator.pop(context),
+                      );
                 }
               },
             ),
