@@ -1,8 +1,10 @@
+import 'package:ace_chat_app/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ContactCard extends StatelessWidget {
-  const ContactCard({Key? key}) : super(key: key);
+  const ContactCard({Key? key, required this.user}) : super(key: key);
+  final UserModel user;
 
   @override
   Widget build(BuildContext context) {
@@ -10,9 +12,9 @@ class ContactCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () {},
-        child: const ListTile(
-          title: Text('Name'),
-          trailing: Icon(FontAwesomeIcons.commentDots),
+        child:  ListTile(
+          title: Text(user.name),
+          trailing: const Icon(FontAwesomeIcons.commentDots),
         ),
       ),
     );

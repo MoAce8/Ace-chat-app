@@ -1,6 +1,10 @@
+import 'package:ace_chat_app/models/user_model.dart';
 import 'package:ace_chat_app/screens/main_screens/contacts_home/new_contact_sheet.dart';
 import 'package:ace_chat_app/screens/main_screens/contacts_home/widgets/contact_card.dart';
 import 'package:ace_chat_app/widgets/custom_text_field.dart';
+import 'package:ace_chat_app/widgets/loading_indicator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ContactsHomeScreen extends StatefulWidget {
@@ -48,10 +52,30 @@ class _ContactsHomeScreenState extends State<ContactsHomeScreen> {
                 )
         ],
       ),
-      body: ListView.builder(
-        itemCount: 7,
-        itemBuilder: (context, index) => const ContactCard(),
-      ),
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('users').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<UserModel> users = snapshot.data!.docs
+                  .map((e) => UserModel.fromJson(e.data()))
+                  .toList();
+              List contacts = users
+                  .where((element) =>
+                      element.id == FirebaseAuth.instance.currentUser!.uid)
+                  .first
+                  .contacts;
+              List myContacts = users
+                  .where((element) => contacts.contains(element.id))
+                  .toList();
+              return ListView.builder(
+                itemCount: myContacts.length,
+                itemBuilder: (context, index) =>
+                    ContactCard(user: myContacts[index]),
+              );
+            } else {
+              return const LoadingIndicator();
+            }
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
