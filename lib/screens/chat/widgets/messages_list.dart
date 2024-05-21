@@ -14,7 +14,7 @@ class ChatMessages extends StatefulWidget {
   }) : super(key: key);
   final String roomId;
   final ScrollController scroller;
-  final Function(List selected, List received) callback;
+  final Function(List selected, List received, List copied) callback;
 
   @override
   State<ChatMessages> createState() => _ChatMessagesState();
@@ -23,6 +23,7 @@ class ChatMessages extends StatefulWidget {
 class _ChatMessagesState extends State<ChatMessages> {
   List selectedMsg = [];
   List userSelectedMsg = [];
+  List copiedMsg = [];
   String uid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
@@ -58,8 +59,14 @@ class _ChatMessagesState extends State<ChatMessages> {
                             ? userSelectedMsg.remove(messages[index].id)
                             : userSelectedMsg.add(messages[index].id);
                       }
+
+                      if (messages[index].type == 'text') {
+                        copiedMsg.contains(messages[index].msg)
+                            ? copiedMsg.remove(messages[index].msg)
+                            : copiedMsg.add(messages[index].msg);
+                      }
                     });
-                    widget.callback(selectedMsg, userSelectedMsg);
+                    widget.callback(selectedMsg, userSelectedMsg, copiedMsg);
                   },
                   onTap: () {
                     setState(() {
@@ -73,9 +80,15 @@ class _ChatMessagesState extends State<ChatMessages> {
                               ? userSelectedMsg.remove(messages[index].id)
                               : userSelectedMsg.add(messages[index].id);
                         }
+
+                        if (messages[index].type == 'text') {
+                          copiedMsg.contains(messages[index].msg)
+                              ? copiedMsg.remove(messages[index].msg)
+                              : copiedMsg.add(messages[index].msg);
+                        }
                       }
                     });
-                    widget.callback(selectedMsg, userSelectedMsg);
+                    widget.callback(selectedMsg, userSelectedMsg, copiedMsg);
                   },
                   child: ChatBubble(
                     roomId: widget.roomId,

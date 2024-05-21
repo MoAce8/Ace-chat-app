@@ -9,6 +9,7 @@ import 'package:ace_chat_app/widgets/loading_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key, required this.roomId, required this.user})
@@ -25,6 +26,7 @@ class _ChatScreenState extends State<ChatScreen> {
   ScrollController scroller = ScrollController();
   bool empty = false;
   List selectedMsg = [];
+  List copiedMsg = [];
   bool showDelete = true;
 
   @override
@@ -67,15 +69,25 @@ class _ChatScreenState extends State<ChatScreen> {
                                       messages: selectedMsg)
                                   .then((value) => setState(() {
                                         selectedMsg.clear();
+                                        copiedMsg.clear();
                                       }));
                             },
                             icon: const Icon(CupertinoIcons.trash),
                           )
                         : const SizedBox(),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.copy),
-                    ),
+                    copiedMsg.length == selectedMsg.length
+                        ? IconButton(
+                            onPressed: () {
+                              Clipboard.setData(
+                                  ClipboardData(text: copiedMsg.join('\n')));
+                              setState(() {
+                                selectedMsg.clear();
+                                copiedMsg.clear();
+                              });
+                            },
+                            icon: const Icon(Icons.copy),
+                          )
+                        : const SizedBox(),
                   ],
                 )
               : const SizedBox()
@@ -100,8 +112,10 @@ class _ChatScreenState extends State<ChatScreen> {
                         ? ChatMessages(
                             roomId: widget.roomId,
                             scroller: scroller,
-                            callback: (selected, received) => setState(() {
+                            callback: (selected, received, copied) =>
+                                setState(() {
                               selectedMsg = selected;
+                              copiedMsg = copied;
                               showDelete = received.isEmpty;
                             }),
                           )
