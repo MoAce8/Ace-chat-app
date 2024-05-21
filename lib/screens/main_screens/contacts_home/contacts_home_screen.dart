@@ -27,6 +27,11 @@ class _ContactsHomeScreenState extends State<ContactsHomeScreen> {
                 label: 'Enter contact name',
                 controller: searchController,
                 autofocus: true,
+                onChanged: (s) {
+                  setState(() {
+                    searchController.text = s!;
+                  });
+                },
               )
             : const Text('My Contacts'),
         actions: [
@@ -66,7 +71,16 @@ class _ContactsHomeScreenState extends State<ContactsHomeScreen> {
                   .contacts;
               List myContacts = users
                   .where((element) => contacts.contains(element.id))
-                  .toList();
+                  .where(
+                    (element) => element.name
+                        .toLowerCase()
+                        .contains(searchController.text.toLowerCase()),
+                  )
+                  .toList()
+                ..sort(
+                  (a, b) =>
+                      a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+                );
               return ListView.builder(
                 itemCount: myContacts.length,
                 itemBuilder: (context, index) =>
