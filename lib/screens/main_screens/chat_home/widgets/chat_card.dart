@@ -43,10 +43,17 @@ class ChatCard extends StatelessWidget {
                 child: ListTile(
                   leading: const CircleAvatar(),
                   title: Text(
-                    user.id!=FirebaseAuth.instance.currentUser!.uid?
-                    user.name:'(You)',
+                    user.id != FirebaseAuth.instance.currentUser!.uid
+                        ? user.name
+                        : '(You)',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  subtitle: Text(room.lastMessage),
+                  subtitle: Text(
+                    room.lastMessage,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   trailing: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [

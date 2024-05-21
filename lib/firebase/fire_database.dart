@@ -18,29 +18,29 @@ class FireData {
     if (friend.docs.isNotEmpty) {
       String friendId = friend.docs.first.id;
 
-        List<String> members = [myId, friendId]..sort(
-            (a, b) => a.compareTo(b),
-          );
+      List<String> members = [myId, friendId]..sort(
+          (a, b) => a.compareTo(b),
+        );
 
-        QuerySnapshot roomExist = await fireStore
+      QuerySnapshot roomExist = await fireStore
+          .collection('rooms')
+          .where('members', isEqualTo: members)
+          .get();
+
+      if (roomExist.docs.isEmpty) {
+        RoomModel newRoom = RoomModel(
+          id: members.toString(),
+          members: members,
+          lastMessage: 'No messages yet',
+          lastMessageTime: DateTime.now().millisecondsSinceEpoch.toString(),
+          createdAt: DateTime.now().millisecondsSinceEpoch.toString(),
+        );
+
+        await fireStore
             .collection('rooms')
-            .where('members', isEqualTo: members)
-            .get();
-
-        if (roomExist.docs.isEmpty) {
-          RoomModel newRoom = RoomModel(
-            id: members.toString(),
-            members: members,
-            lastMessage: 'lastMessage',
-            lastMessageTime: DateTime.now().millisecondsSinceEpoch.toString(),
-            createdAt: DateTime.now().millisecondsSinceEpoch.toString(),
-          );
-
-          await fireStore
-              .collection('rooms')
-              .doc(members.toString())
-              .set(newRoom.toJson());
-        }
+            .doc(members.toString())
+            .set(newRoom.toJson());
+      }
     } else {
       showSnackBar(context, 'User not found');
     }
@@ -52,9 +52,9 @@ class FireData {
         .where('email', isEqualTo: email)
         .get();
     if (friend.docs.isNotEmpty) {
-        fireStore.collection('users').doc(myId).update({
-          'contacts': FieldValue.arrayUnion([friend.docs.first.id])
-        });
+      fireStore.collection('users').doc(myId).update({
+        'contacts': FieldValue.arrayUnion([friend.docs.first.id])
+      });
     }
   }
 
@@ -65,6 +65,9 @@ class FireData {
     String? type,
   }) async {
     String msgId = const Uuid().v1();
+    if (userId == myId) {
+      userId = '';
+    }
     MessageModel newMessage = MessageModel(
       id: msgId,
       fromId: myId,
@@ -101,15 +104,28 @@ class FireData {
 
   Future deleteMessage({
     required String roomId,
-    required List messages,
+    required List selectedMessages,
+    required List<MessageModel> messages,
   }) async {
-    for (var msg in messages) {
+    for (var msg in selectedMessages) {
       await fireStore
           .collection('rooms')
           .doc(roomId)
           .collection('messages')
           .doc(msg)
-          .delete();
+          .delete().then((value) {
+
+      });
+    }
+
+    if (selectedMessages.contains(messages.first.id)) {
+      await fireStore.collection('rooms').doc(roomId).update({
+        'last_message': messages.length == selectedMessages.length
+            ? 'No messages yet'
+            : messages.first.type == 'text'
+                ? messages[1].msg
+                : messages[1].type,
+      });
     }
   }
 }

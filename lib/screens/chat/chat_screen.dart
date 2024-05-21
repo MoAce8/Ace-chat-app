@@ -28,9 +28,12 @@ class _ChatScreenState extends State<ChatScreen> {
   List selectedMsg = [];
   List copiedMsg = [];
   bool showDelete = true;
+  List<MessageModel> messages = [];
 
   @override
   Widget build(BuildContext context) {
+    int ln = widget.user.name.length;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -44,7 +47,13 @@ class _ChatScreenState extends State<ChatScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.user.name),
+                Text(
+                  ln > 10 && selectedMsg.isNotEmpty
+                      ? '${widget.user.name.substring(0, 10)}...'
+                      : ln <= 20
+                          ? widget.user.name
+                          : '${widget.user.name.substring(0, 20)}...',
+                ),
                 Text(
                   'Last seen '
                   // '${DateTime.fromMillisecondsSinceEpoch(int.parse(widget.user.lastSeen)).toString()}'
@@ -65,8 +74,10 @@ class _ChatScreenState extends State<ChatScreen> {
                             onPressed: () {
                               FireData()
                                   .deleteMessage(
-                                      roomId: widget.roomId,
-                                      messages: selectedMsg)
+                                    roomId: widget.roomId,
+                                    selectedMessages: selectedMsg,
+                                    messages: messages,
+                                  )
                                   .then((value) => setState(() {
                                         selectedMsg.clear();
                                         copiedMsg.clear();
@@ -105,11 +116,15 @@ class _ChatScreenState extends State<ChatScreen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    List<MessageModel> messages = snapshot.data!.docs
+                    messages = snapshot.data!.docs
                         .map((e) => MessageModel.fromJson(e.data()))
-                        .toList();
+                        .toList()
+                      ..sort(
+                        (a, b) => b.createdAt.compareTo(a.createdAt),
+                      );
                     return messages.isNotEmpty
                         ? ChatMessages(
+                            messages: messages,
                             roomId: widget.roomId,
                             scroller: scroller,
                             callback: (selected, received, copied) =>
@@ -153,7 +168,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 IconButton.filled(
                   onPressed: () {
                     if (messageCont.text.trim().isNotEmpty) {
-                      scroller.jumpTo(0);
+                      if (messages.isNotEmpty) {
+                        scroller.jumpTo(0);
+                      }
                       FireData()
                           .sendMessage(
                         userId: widget.user.id,
