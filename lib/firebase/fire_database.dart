@@ -33,7 +33,7 @@ class FireData {
         RoomModel newRoom = RoomModel(
           id: members.toString(),
           members: members,
-          lastMessage: 'You started a chat',
+          lastMessage: 'Send your first message',
           lastMessageTime: now,
           createdAt: now,
         );
@@ -46,23 +46,6 @@ class FireData {
     } else {
       showSnackBar(context, 'User not found');
     }
-  }
-
-  Future createGroup({required String name, required List members}) async {
-    members.add(myId);
-    String groupId = const Uuid().v1();
-    GroupModel newGroup = GroupModel(
-      id: groupId,
-      name: name,
-      img: '',
-      members: members,
-      admins: [myId],
-      lastMessage: 'You created a group',
-      lastMessageTime: now,
-      createdAt: now,
-    );
-
-    await fireStore.collection('groups').doc(groupId).set(newGroup.toJson());
   }
 
   Future addContact({required String email}) async {
@@ -132,14 +115,13 @@ class FireData {
           .doc(roomId)
           .collection('messages')
           .doc(msg)
-          .delete()
-          .then((value) {});
+          .delete();
     }
 
     if (selectedMessages.contains(messages.first.id)) {
       await fireStore.collection('rooms').doc(roomId).update({
         'last_message': messages.length == selectedMessages.length
-            ? 'You started a chat'
+            ? 'Send your first message'
             : messages.first.type == 'text'
                 ? messages[1].msg
                 : messages[1].type,
@@ -157,4 +139,88 @@ class FireData {
       });
     }
   }
+
+  ////////Group
+
+  Future createGroup({required String name, required List members}) async {
+    members.add(myId);
+    String groupId = const Uuid().v1();
+    GroupModel newGroup = GroupModel(
+      id: groupId,
+      name: name,
+      img: '',
+      members: members,
+      admins: [myId],
+      lastMessage: 'New group created',
+      lastMessageTime: now,
+      createdAt: now,
+    );
+
+    await fireStore.collection('groups').doc(groupId).set(newGroup.toJson());
+  }
+
+  Future sendGroupMessage({
+    required String msg,
+    required String groupId,
+    String? type,
+  }) async {
+    String msgId = const Uuid().v1();
+    MessageModel newMessage = MessageModel(
+      id: msgId,
+      fromId: myId,
+      toId: 'group',
+      msg: msg,
+      createdAt: now,
+      type: type ?? 'text',
+      read: false,
+    );
+    await fireStore
+        .collection('groups')
+        .doc(groupId)
+        .collection('messages')
+        .doc(msgId)
+        .set(newMessage.toJson());
+
+    await fireStore.collection('groups').doc(groupId).update({
+      'last_message': type ?? msg,
+      'last_message_time': now,
+    });
+  }
+
+  Future deleteGroupMessage({
+    required String groupId,
+    required List selectedMessages,
+    required List<MessageModel> messages,
+  }) async {
+    for (var msg in selectedMessages) {
+      await fireStore
+          .collection('groups')
+          .doc(groupId)
+          .collection('messages')
+          .doc(msg)
+          .delete();
+    }
+
+    if (selectedMessages.contains(messages.first.id)) {
+      await fireStore.collection('groups').doc(groupId).update({
+        'last_message': messages.length == selectedMessages.length
+            ? 'New group created'
+            : messages.first.type == 'text'
+            ? messages[1].msg
+            : messages[1].type,
+      });
+      String groupTime = '';
+      await fireStore.collection('groups').doc(groupId).get().then((value) {
+        RoomModel data = RoomModel.fromJson(value.data());
+        groupTime = data.createdAt;
+      });
+
+      await fireStore.collection('rooms').doc(groupId).update({
+        'last_message_time': messages.length == selectedMessages.length
+            ? groupTime
+            : messages[1].createdAt
+      });
+    }
+  }
+
 }

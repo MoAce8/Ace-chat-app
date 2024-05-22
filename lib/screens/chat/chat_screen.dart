@@ -24,10 +24,9 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   TextEditingController messageCont = TextEditingController();
   ScrollController scroller = ScrollController();
-  bool empty = false;
   List selectedMsg = [];
   List copiedMsg = [];
-  bool showDelete = true;
+  List receivedMsg = [];
   List<MessageModel> messages = [];
 
   @override
@@ -69,7 +68,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    showDelete
+                    receivedMsg.isEmpty
                         ? IconButton(
                             onPressed: () {
                               FireData()
@@ -81,6 +80,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   .then((value) => setState(() {
                                         selectedMsg.clear();
                                         copiedMsg.clear();
+                                        receivedMsg.clear();
                                       }));
                             },
                             icon: const Icon(CupertinoIcons.trash),
@@ -94,6 +94,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               setState(() {
                                 selectedMsg.clear();
                                 copiedMsg.clear();
+                                receivedMsg.clear();
                               });
                             },
                             icon: const Icon(Icons.copy),
@@ -131,12 +132,16 @@ class _ChatScreenState extends State<ChatScreen> {
                                 setState(() {
                               selectedMsg = selected;
                               copiedMsg = copied;
-                              showDelete = received.isEmpty;
+                              receivedMsg = received;
                             }),
                           )
                         : EmptyChat(
-                            roomId: widget.roomId,
-                            user: widget.user,
+                            onTap: () {
+                              FireData().sendMessage(
+                                  userId: widget.user.id,
+                                  msg: 'Hi 👋',
+                                  roomId: widget.roomId);
+                            },
                           );
                   } else {
                     return const LoadingIndicator();
@@ -152,8 +157,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       label: 'Message',
                       controller: messageCont,
                       suffix: IconButton(
-                        onPressed: () async {
-                          await pickFromGallery(
+                        onPressed: () {
+                          pickFromGallery(
                               roomId: widget.roomId, userId: widget.user.id);
                         },
                         icon: const Icon(Icons.attach_file),

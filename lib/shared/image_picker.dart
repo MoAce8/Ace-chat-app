@@ -15,6 +15,17 @@ pickFromGallery({
   }
 }
 
+pickFromGalleryGroup({
+  required String groupId,
+}) async {
+  final ImagePicker picker = ImagePicker();
+  XFile? file = await picker.pickImage(source: ImageSource.gallery);
+  if (file != null) {
+    FireStorage()
+        .sendGImage(file: File(file.path), groupId: groupId);
+  }
+}
+
 pickFromCamera() async {
   final ImagePicker picker = ImagePicker();
   XFile? file = await picker.pickImage(source: ImageSource.camera);

@@ -23,4 +23,20 @@ class FireStorage {
     FireData().sendMessage(
         userId: userId, msg: imageUrl, roomId: roomId, type: 'image');
   }
+
+  sendGImage({
+    required File file,
+    required String groupId,
+  }) async {
+    String ext = file.path.split('.').last;
+
+    final ref = fireStorage
+        .ref()
+        .child('images/$groupId/${DateTime.now().millisecondsSinceEpoch}.$ext');
+
+    await ref.putFile(file);
+
+    String imageUrl = await ref.getDownloadURL();
+    FireData().sendGroupMessage(msg: imageUrl, groupId: groupId, type: 'image');
+  }
 }

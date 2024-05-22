@@ -1,6 +1,9 @@
 import 'package:ace_chat_app/models/group_model.dart';
+import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/screens/group/group_chat_screen.dart';
 import 'package:ace_chat_app/shared/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class GroupCard extends StatelessWidget {
@@ -14,7 +17,7 @@ class GroupCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const GroupChatScreen(),
+            builder: (context) => GroupChatScreen(group: group),
           ),
         );
       },
@@ -39,14 +42,33 @@ class GroupCard extends StatelessWidget {
                         int.parse(group.lastMessageTime))
                     .toString(),
               ),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: kPrimaryColor,
-                ),
-                child: const Text('3'),
-              ),
+              StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('groups')
+                      .doc(group.id)
+                      .collection('messages')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    final unreadList = snapshot.data?.docs
+                        .map((e) => MessageModel.fromJson(e.data()))
+                        .where((element) => !element.read)
+                        .where((element) =>
+                    element.toId ==
+                        FirebaseAuth.instance.currentUser!.uid)
+                        .toList();
+                    if (snapshot.hasData && unreadList!.isNotEmpty) {
+                      return Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: kPrimaryColor,
+                        ),
+                        child: Text(unreadList.length.toString()),
+                      );
+                    } else {
+                      return const SizedBox();
+                    }
+                  }),
             ],
           ),
         ),
