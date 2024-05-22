@@ -1,3 +1,4 @@
+import 'package:ace_chat_app/models/group_model.dart';
 import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/models/room_model.dart';
 import 'package:ace_chat_app/shared/constants.dart';
@@ -9,6 +10,7 @@ import 'package:uuid/uuid.dart';
 class FireData {
   final String myId = FirebaseAuth.instance.currentUser!.uid;
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
+  final String now = DateTime.now().millisecondsSinceEpoch.toString();
 
   Future createRoom(BuildContext context, {required String email}) async {
     QuerySnapshot friend = await fireStore
@@ -31,9 +33,9 @@ class FireData {
         RoomModel newRoom = RoomModel(
           id: members.toString(),
           members: members,
-          lastMessage: 'No messages yet',
-          lastMessageTime: DateTime.now().millisecondsSinceEpoch.toString(),
-          createdAt: DateTime.now().millisecondsSinceEpoch.toString(),
+          lastMessage: 'You started a chat',
+          lastMessageTime: now,
+          createdAt: now,
         );
 
         await fireStore
@@ -44,6 +46,23 @@ class FireData {
     } else {
       showSnackBar(context, 'User not found');
     }
+  }
+
+  Future createGroup({required String name, required List members}) async {
+    members.add(myId);
+    String groupId = const Uuid().v1();
+    GroupModel newGroup = GroupModel(
+      id: groupId,
+      name: name,
+      img: '',
+      members: members,
+      admins: [myId],
+      lastMessage: 'You created a group',
+      lastMessageTime: now,
+      createdAt: now,
+    );
+
+    await fireStore.collection('groups').doc(groupId).set(newGroup.toJson());
   }
 
   Future addContact({required String email}) async {
@@ -73,7 +92,7 @@ class FireData {
       fromId: myId,
       toId: userId,
       msg: msg,
-      createdAt: DateTime.now().millisecondsSinceEpoch.toString(),
+      createdAt: now,
       type: type ?? 'text',
       read: false,
     );
@@ -86,7 +105,7 @@ class FireData {
 
     await fireStore.collection('rooms').doc(roomId).update({
       'last_message': type ?? msg,
-      'last_message_time': DateTime.now().millisecondsSinceEpoch.toString(),
+      'last_message_time': now,
     });
   }
 
@@ -113,18 +132,28 @@ class FireData {
           .doc(roomId)
           .collection('messages')
           .doc(msg)
-          .delete().then((value) {
-
-      });
+          .delete()
+          .then((value) {});
     }
 
     if (selectedMessages.contains(messages.first.id)) {
       await fireStore.collection('rooms').doc(roomId).update({
         'last_message': messages.length == selectedMessages.length
-            ? 'No messages yet'
+            ? 'You started a chat'
             : messages.first.type == 'text'
                 ? messages[1].msg
                 : messages[1].type,
+      });
+      String roomTime = '';
+      await fireStore.collection('rooms').doc(roomId).get().then((value) {
+        RoomModel data = RoomModel.fromJson(value.data());
+        roomTime = data.createdAt;
+      });
+
+      await fireStore.collection('rooms').doc(roomId).update({
+        'last_message_time': messages.length == selectedMessages.length
+            ? roomTime
+            : messages[1].createdAt
       });
     }
   }
