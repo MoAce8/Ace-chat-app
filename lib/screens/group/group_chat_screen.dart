@@ -60,10 +60,29 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                               ? widget.group.name
                               : '${widget.group.name.substring(0, 20)}...',
                     ),
-                    Text(
-                      'Mohammed, Tharwat, Ace',
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('users')
+                            .where('id', whereIn: widget.group.members)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            List<String> users = [];
+                            for (var item in snapshot.data!.docs) {
+                              users.add(item.data()['name']);
+                            }
+                            users.sort(
+                                  (a, b) =>
+                                  a.toLowerCase().compareTo(b.toLowerCase()),
+                            );
+                            return Text(
+                              users.join(', '),
+                              style: Theme.of(context).textTheme.labelMedium,
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        }),
                   ],
                 ),
               ],

@@ -2,6 +2,7 @@ import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:ace_chat_app/widgets/loading_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -44,13 +45,24 @@ class GroupChatBubble extends StatelessWidget {
             children: [
               isMe
                   ? const SizedBox()
-                  : const Text(
-                      'Mohammed',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.pinkAccent,
-                      ),
-                    ),
+                  : StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(msg.fromId)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Text(
+                            snapshot.data!.data()!['name'],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.pinkAccent,
+                            ),
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
+                      }),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -61,7 +73,8 @@ class GroupChatBubble extends StatelessWidget {
                         )
                       : CachedNetworkImage(
                           imageUrl: msg.msg,
-                          placeholder: (context, url) => const LoadingIndicator(),
+                          placeholder: (context, url) =>
+                              const LoadingIndicator(),
                         ),
                   const SizedBox(
                     height: 5,
