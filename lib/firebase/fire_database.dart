@@ -206,8 +206,8 @@ class FireData {
         'last_message': messages.length == selectedMessages.length
             ? 'New group created'
             : messages.first.type == 'text'
-            ? messages[1].msg
-            : messages[1].type,
+                ? messages[1].msg
+                : messages[1].type,
       });
       String groupTime = '';
       await fireStore.collection('groups').doc(groupId).get().then((value) {
@@ -223,4 +223,48 @@ class FireData {
     }
   }
 
+  Future editGroup({
+    required String groupId,
+    required String name,
+    required List members,
+  }) async {
+    await fireStore
+        .collection('groups')
+        .doc(groupId)
+        .update({'name': name, 'members': FieldValue.arrayUnion(members)});
+  }
+
+  Future removeMember({
+    required String groupId,
+    required String member,
+    required bool admin,
+  })async{
+    await fireStore
+        .collection('groups')
+        .doc(groupId)
+        .update({'members': FieldValue.arrayRemove([member])});
+    if(admin){
+      removeAdmin(groupId: groupId, member: member);
+    }
+  }
+
+  Future addAdmin({
+    required String groupId,
+    required String member,
+  })async{
+    await fireStore
+        .collection('groups')
+        .doc(groupId)
+        .update({'admins': FieldValue.arrayUnion([member])});
+  }
+
+  Future removeAdmin({
+    required String groupId,
+    required String member,
+  })async{
+    await fireStore
+        .collection('groups')
+        .doc(groupId)
+        .update({'admins': FieldValue.arrayRemove([member])});
+  }
 }

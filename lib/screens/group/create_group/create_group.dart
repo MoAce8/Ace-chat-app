@@ -57,24 +57,34 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             const SizedBox(
               height: 18,
             ),
-            const Row(
+             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Members'),
-                Text('0'),
+                const Text('Members'),
+                Text(members.length.toString()),
               ],
             ),
             Expanded(
               child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('users')
-                      .where('id',
-                          isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       List<UserModel> users = snapshot.data!.docs
                           .map((e) => UserModel.fromJson(e.data()))
+                          .toList();
+                      List contacts = users
+                          .where((element) =>
+                              element.id ==
+                              FirebaseAuth.instance.currentUser!.uid)
+                          .first
+                          .contacts;
+                      List myContacts = users
+                          .where((element) => contacts.contains(element.id))
+                          .where((element) =>
+                              element.id !=
+                              FirebaseAuth.instance.currentUser!.uid)
                           .toList()
                         ..sort(
                           (a, b) => a.name
@@ -82,17 +92,17 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                               .compareTo(b.name.toLowerCase()),
                         );
                       return ListView.builder(
-                        itemCount: snapshot.data!.docs.length,
+                        itemCount: myContacts.length,
                         itemBuilder: (context, index) => CheckboxListTile(
-                          title: Text(users[index].name),
+                          title: Text(myContacts[index].name),
                           checkboxShape: const CircleBorder(),
-                          value: members.contains(users[index].id),
+                          value: members.contains(myContacts[index].id),
                           onChanged: (value) {
                             setState(() {
                               if (value!) {
-                                members.add(users[index].id);
+                                members.add(myContacts[index].id);
                               } else {
-                                members.remove(users[index].id);
+                                members.remove(myContacts[index].id);
                               }
                             });
                           },

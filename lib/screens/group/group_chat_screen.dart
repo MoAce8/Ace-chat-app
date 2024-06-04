@@ -39,7 +39,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MembersScreen(),
+                    builder: (context) => MembersScreen(group: widget.group),
                   ));
             },
             child: Row(
