@@ -1,3 +1,4 @@
+import 'package:ace_chat_app/cubit/theme_cubit/theme_cubit.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class BuildBottomNavBar extends StatelessWidget {
         elevation: 10,
         onTap: selectScreen,
         currentIndex: activeScreen,
-        selectedItemColor: kPrimaryColor,
+        selectedItemColor: ThemeCubit.get(context).mainColor,
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,

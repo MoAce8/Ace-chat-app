@@ -1,3 +1,4 @@
+import 'package:ace_chat_app/cubit/theme_cubit/theme_cubit.dart';
 import 'package:ace_chat_app/screens/main_screens/settings_home/widgets/settings_card.dart';
 import 'package:ace_chat_app/screens/settings/profile/profile_screen.dart';
 import 'package:ace_chat_app/screens/settings/qr_code/qr_code_screen.dart';
@@ -8,9 +9,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,8 +69,10 @@ class SettingsScreen extends StatelessWidget {
                   builder: (context) => AlertDialog(
                     content: SingleChildScrollView(
                       child: BlockPicker(
-                        pickerColor: Colors.indigo,
-                        onColorChanged: (value) {},
+                        pickerColor: ThemeCubit.get(context).mainColor,
+                        onColorChanged: (value) {
+                          ThemeCubit.get(context).changeColor(color: value);
+                        },
                       ),
                     ),
                     actions: [
@@ -82,8 +90,12 @@ class SettingsScreen extends StatelessWidget {
               title: 'Dark Mode',
               icon: CupertinoIcons.moon,
               trailing: Switch(
-                value: true,
-                onChanged: (value) {},
+                value: ThemeCubit.get(context).theme == ThemeMode.dark,
+                onChanged: (value) {
+                  setState(() {
+                    ThemeCubit.get(context).changeTheme(dark: value);
+                  });
+                },
               ),
             ),
             SizedBox(
@@ -93,8 +105,7 @@ class SettingsScreen extends StatelessWidget {
               title: 'Sign Out',
               trailing: Icon(Icons.logout),
               onTap: () async {
-                await FirebaseAuth.instance
-                    .signOut();
+                await FirebaseAuth.instance.signOut();
               },
             ),
           ],
