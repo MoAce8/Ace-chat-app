@@ -1,12 +1,15 @@
 import 'package:ace_chat_app/cubit/theme_cubit/theme_cubit.dart';
+import 'package:ace_chat_app/cubit/user_cubit/user_cubit.dart';
 import 'package:ace_chat_app/screens/main_screens/settings_home/widgets/settings_card.dart';
 import 'package:ace_chat_app/screens/settings/profile/profile_screen.dart';
 import 'package:ace_chat_app/screens/settings/qr_code/qr_code_screen.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:ace_chat_app/widgets/app_button.dart';
+import 'package:ace_chat_app/widgets/loading_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -29,21 +32,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         child: Column(
           children: [
-            ListTile(
-              leading: const CircleAvatar(
-                radius: 28,
-              ),
-              title: const Text('Mohammed Tharwat'),
-              trailing: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const QRCodeScreen(),
-                      ));
-                },
-                icon: const Icon(Icons.qr_code),
-              ),
+            BlocBuilder<UserCubit, UserState>(
+              builder: (context, state) {
+                if (state is UserGotInfo) {
+                  return ListTile(
+                    leading: const CircleAvatar(
+                      radius: 28,
+                    ),
+                    title: Text(UserCubit.get(context).user.name),
+                    trailing: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const QRCodeScreen(),
+                            ));
+                      },
+                      icon: const Icon(Icons.qr_code),
+                    ),
+                  );
+                }else{
+                  return const LoadingIndicator();
+                }
+              },
             ),
             SizedBox(
               height: screenHeight(context) * .025,

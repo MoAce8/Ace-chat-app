@@ -1,5 +1,5 @@
-import 'package:ace_chat_app/cubit/login_cubit/login_cubit.dart';
 import 'package:ace_chat_app/cubit/theme_cubit/theme_cubit.dart';
+import 'package:ace_chat_app/cubit/user_cubit/user_cubit.dart';
 import 'package:ace_chat_app/firebase_options.dart';
 import 'package:ace_chat_app/screens/auth/login/login_screen.dart';
 import 'package:ace_chat_app/screens/home/tabs_screen/home_screen.dart';
@@ -48,29 +48,29 @@ class _ThemedAppState extends State<ThemedApp> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeState>(
-  builder: (context, state) {
-    return MaterialApp(
-      title: 'Ace Message',
-      debugShowCheckedModeBanner: false,
-      themeMode: ThemeCubit.get(context).theme,
-      darkTheme: appTheme(context, dark: true),
-      theme: appTheme(context),
-      home: BlocProvider(
-        create: (context) => LoginCubit(),
-        child: StreamBuilder(
-          stream: FirebaseAuth.instance.userChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return const HomeScreen();
-            } else {
-              return const LoginScreen();
-            }
-          },
-        ),
-      ),
+      builder: (context, state) {
+        return MaterialApp(
+          title: 'Ace Message',
+          debugShowCheckedModeBanner: false,
+          themeMode: ThemeCubit.get(context).theme,
+          darkTheme: appTheme(context, dark: true),
+          theme: appTheme(context),
+          home: BlocProvider(
+            create: (context) => UserCubit(),
+            child: StreamBuilder(
+              stream: FirebaseAuth.instance.userChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return const HomeScreen();
+                } else {
+                  return const LoginScreen();
+                }
+              },
+            ),
+          ),
+        );
+      },
     );
-  },
-);
   }
 
   ThemeData appTheme(BuildContext context, {bool dark = false}) {

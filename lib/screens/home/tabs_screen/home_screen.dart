@@ -1,3 +1,4 @@
+import 'package:ace_chat_app/cubit/user_cubit/user_cubit.dart';
 import 'package:ace_chat_app/screens/home/tabs_screen/bottom_nav.dart';
 import 'package:ace_chat_app/screens/main_screens/chat_home/chats_home_screen.dart';
 import 'package:ace_chat_app/screens/main_screens/contacts_home/contacts_home_screen.dart';
@@ -27,6 +28,12 @@ class _HomeScreenState extends State<HomeScreen> {
       swipeSelectScreen(id);
       pageController.jumpToPage(id);
     });
+  }
+
+  @override
+  void initState() {
+    UserCubit.get(context).getUserInfo();
+    super.initState();
   }
 
   @override
