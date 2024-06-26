@@ -23,7 +23,14 @@ class GroupCard extends StatelessWidget {
       },
       child: Card(
         child: ListTile(
-          leading: const CircleAvatar(),
+          leading: group.img.isNotEmpty
+              ? CircleAvatar(
+            backgroundImage: NetworkImage(group.img),
+          )
+              : const CircleAvatar(
+            backgroundImage:
+            AssetImage('assets/images/group.png'),
+          ),
           title: Text(
             group.name,
             maxLines: 1,

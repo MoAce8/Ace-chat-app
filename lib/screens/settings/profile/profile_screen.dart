@@ -1,5 +1,7 @@
+import 'package:ace_chat_app/cubit/user_cubit/user_cubit.dart';
 import 'package:ace_chat_app/screens/settings/profile/widgets/profile_card.dart';
 import 'package:ace_chat_app/shared/constants.dart';
+import 'package:ace_chat_app/shared/image_picker.dart';
 import 'package:ace_chat_app/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -20,9 +22,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    nameCont.text = 'Mohammed Tharwat';
-    aboutCont.text = 'Flutter Developer';
-    emailCont.text = 'mohammedtharwat21@gmail.com';
+    nameCont.text = UserCubit.get(context).user.name;
+    aboutCont.text = UserCubit.get(context).user.about;
+    emailCont.text = UserCubit.get(context).user.email;
     super.initState();
   }
 
@@ -41,14 +43,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    const CircleAvatar(
-                      radius: 70,
-                    ),
+                    UserCubit.get(context).user.image.isNotEmpty
+                        ? CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(UserCubit.get(context).user.image),
+                            radius: 70,
+                          )
+                        : const CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/images/profile.png'),
+                            radius: 70,
+                          ),
                     Positioned(
                       bottom: -10,
                       right: -10,
                       child: IconButton.filled(
-                        onPressed: () {},
+                        onPressed: () async{
+                          String p = await pickProfilePic();
+                          setState(() {
+                            UserCubit.get(context).user.copyWith(image: p);
+                          });
+                        },
                         icon: const Icon(Icons.camera_alt),
                       ),
                     ),

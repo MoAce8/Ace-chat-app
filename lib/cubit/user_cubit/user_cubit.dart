@@ -12,7 +12,7 @@ class UserCubit extends Cubit<UserState> {
 
   static UserCubit get(context) => BlocProvider.of<UserCubit>(context);
 
-  late final UserModel user;
+  late UserModel user;
 
   getUserInfo() async {
     emit(UserLoading());
@@ -27,5 +27,9 @@ class UserCubit extends Cubit<UserState> {
     } catch (e) {
       emit(UserFailure());
     }
+  }
+
+  updateUser({String? image, String? name}){
+    user = user.copyWith(image: image, name: name);
   }
 }

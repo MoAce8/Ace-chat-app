@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:ace_chat_app/firebase/fire_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class FireStorage {
@@ -38,5 +40,27 @@ class FireStorage {
 
     String imageUrl = await ref.getDownloadURL();
     FireData().sendGroupMessage(msg: imageUrl, groupId: groupId, type: 'image');
+  }
+
+  Future<String> updateProfilePic({
+    required File file,
+  }) async {
+    String myId = FirebaseAuth.instance.currentUser!.uid;
+    String ext = file.path.split('.').last;
+
+    final ref = fireStorage
+        .ref()
+        .child('profile/$myId/${DateTime.now().millisecondsSinceEpoch}.$ext');
+
+    await ref.putFile(file);
+
+    String imageUrl = await ref.getDownloadURL();
+    print('****************************');
+    print(imageUrl);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(myId)
+        .update({'image': imageUrl});
+    return imageUrl;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:ace_chat_app/cubit/user_cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -14,7 +15,7 @@ class QRCodeScreen extends StatelessWidget {
         child: Card(
           color: Colors.white,
           child: QrImageView(
-            data: '1234567890',
+            data: UserCubit.get(context).user.email,
             version: 1,
             size: 240,
           ),

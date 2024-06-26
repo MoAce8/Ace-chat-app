@@ -36,9 +36,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
               builder: (context, state) {
                 if (state is UserGotInfo) {
                   return ListTile(
-                    leading: const CircleAvatar(
-                      radius: 28,
-                    ),
+                    leading: UserCubit.get(context).user.image.isNotEmpty
+                        ? CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(UserCubit.get(context).user.image),
+                            radius: 28,
+                          )
+                        : const CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/images/profile.png'),
+                            radius: 28,
+                          ),
                     title: Text(UserCubit.get(context).user.name),
                     trailing: IconButton(
                       onPressed: () {
@@ -51,7 +59,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       icon: const Icon(Icons.qr_code),
                     ),
                   );
-                }else{
+                } else {
                   return const LoadingIndicator();
                 }
               },
@@ -114,7 +122,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             SettingsCard(
               title: 'Sign Out',
-              trailing: Icon(Icons.logout),
+              trailing: const Icon(Icons.logout),
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
               },

@@ -37,7 +37,14 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            const CircleAvatar(
+            widget.user.image.isNotEmpty
+                ? CircleAvatar(
+              backgroundImage: NetworkImage(widget.user.image),
+              radius: 18,
+            )
+                : const CircleAvatar(
+              backgroundImage:
+              AssetImage('assets/images/profile.png'),
               radius: 18,
             ),
             const SizedBox(

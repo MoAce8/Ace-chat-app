@@ -35,17 +35,35 @@ class UserModel {
     );
   }
 
-  Map<String,dynamic> toJson(){
-    return{
-      'id':id,
-      'name':name,
-      'email':email,
-      'image':image,
-      'about':about,
-      'last_seen':lastSeen,
-      'push_token':pushToken,
-      'online':online,
-      'contacts':contacts,
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'image': image,
+      'about': about,
+      'last_seen': lastSeen,
+      'push_token': pushToken,
+      'online': online,
+      'contacts': contacts,
     };
+  }
+
+  UserModel copyWith({
+    String? name,
+    String? image,
+    String? about,
+  }) {
+    return UserModel(
+      id: id,
+      name: name ?? this.name,
+      email: email,
+      image: image ?? this.image,
+      about: about ?? this.about,
+      lastSeen: lastSeen,
+      pushToken: pushToken,
+      online: online,
+      contacts: contacts,
+    );
   }
 }

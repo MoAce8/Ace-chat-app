@@ -44,7 +44,14 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
             },
             child: Row(
               children: [
-                const CircleAvatar(
+                widget.group.img.isNotEmpty
+                    ? CircleAvatar(
+                  backgroundImage: NetworkImage(widget.group.img),
+                  radius: 18,
+                )
+                    : const CircleAvatar(
+                  backgroundImage:
+                  AssetImage('assets/images/group.png'),
                   radius: 18,
                 ),
                 const SizedBox(

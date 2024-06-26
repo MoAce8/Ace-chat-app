@@ -49,15 +49,15 @@ class _ThemedAppState extends State<ThemedApp> {
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, state) {
-        return MaterialApp(
-          title: 'Ace Message',
-          debugShowCheckedModeBanner: false,
-          themeMode: ThemeCubit.get(context).theme,
-          darkTheme: appTheme(context, dark: true),
-          theme: appTheme(context),
-          home: BlocProvider(
-            create: (context) => UserCubit(),
-            child: StreamBuilder(
+        return BlocProvider(
+          create: (context) => UserCubit(),
+          child: MaterialApp(
+            title: 'Ace Message',
+            debugShowCheckedModeBanner: false,
+            themeMode: ThemeCubit.get(context).theme,
+            darkTheme: appTheme(context, dark: true),
+            theme: appTheme(context),
+            home: StreamBuilder(
               stream: FirebaseAuth.instance.userChanges(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {

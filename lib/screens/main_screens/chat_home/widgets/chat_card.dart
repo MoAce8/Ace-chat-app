@@ -41,7 +41,14 @@ class ChatCard extends StatelessWidget {
               },
               child: Card(
                 child: ListTile(
-                  leading: const CircleAvatar(),
+                  leading: user.image.isNotEmpty
+                      ? CircleAvatar(
+                          backgroundImage: NetworkImage(user.image),
+                        )
+                      : const CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/profile.png'),
+                        ),
                   title: Text(
                     user.id != FirebaseAuth.instance.currentUser!.uid
                         ? user.name
