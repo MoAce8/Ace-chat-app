@@ -1,3 +1,4 @@
+import 'package:ace_chat_app/cubit/login_cubit/login_cubit.dart';
 import 'package:ace_chat_app/cubit/theme_cubit/theme_cubit.dart';
 import 'package:ace_chat_app/cubit/user_cubit/user_cubit.dart';
 import 'package:ace_chat_app/firebase_options.dart';
@@ -63,7 +64,9 @@ class _ThemedAppState extends State<ThemedApp> {
                 if (snapshot.hasData) {
                   return const HomeScreen();
                 } else {
-                  return const LoginScreen();
+                  return BlocProvider(
+                      create: (context) => LoginCubit(),
+                      child: const LoginScreen());
                 }
               },
             ),

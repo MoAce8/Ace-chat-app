@@ -25,4 +25,11 @@ class FireAuth {
         .doc(currentUser.uid)
         .set(newUser.toJson());
   }
+
+  Future updateToken(String token) async {
+    await fireStore
+        .collection('users')
+        .doc(currentUser.uid)
+        .update({'push_token': token});
+  }
 }

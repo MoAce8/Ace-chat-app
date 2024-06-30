@@ -53,6 +53,7 @@ class UserModel {
     String? name,
     String? image,
     String? about,
+    String? pushToken,
   }) {
     return UserModel(
       id: id,
@@ -61,7 +62,7 @@ class UserModel {
       image: image ?? this.image,
       about: about ?? this.about,
       lastSeen: lastSeen,
-      pushToken: pushToken,
+      pushToken: pushToken?? this.pushToken,
       online: online,
       contacts: contacts,
     );
