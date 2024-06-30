@@ -29,7 +29,8 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
-  updateUser({String? image, String? name}){
-    user = user.copyWith(image: image, name: name);
+  updateUser({String? image, String? name, String? about}){
+    user = user.copyWith(image: image, name: name, about: about);
+    emit(UserProfileUpdated());
   }
 }

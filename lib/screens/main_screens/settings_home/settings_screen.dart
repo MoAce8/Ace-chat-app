@@ -34,7 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             BlocBuilder<UserCubit, UserState>(
               builder: (context, state) {
-                if (state is UserGotInfo) {
+                if (state is UserGotInfo || state is UserProfileUpdated) {
                   return ListTile(
                     leading: UserCubit.get(context).user.image.isNotEmpty
                         ? CircleAvatar(

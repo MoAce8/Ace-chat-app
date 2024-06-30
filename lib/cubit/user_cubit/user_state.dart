@@ -10,3 +10,5 @@ class UserGotInfo extends UserState {}
 class UserLoading extends UserState {}
 
 class UserFailure extends UserState {}
+
+class UserProfileUpdated extends UserState {}

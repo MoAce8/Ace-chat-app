@@ -1,4 +1,5 @@
 import 'package:ace_chat_app/cubit/user_cubit/user_cubit.dart';
+import 'package:ace_chat_app/firebase/fire_database.dart';
 import 'package:ace_chat_app/screens/settings/profile/widgets/profile_card.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:ace_chat_app/shared/image_picker.dart';
@@ -26,6 +27,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     aboutCont.text = UserCubit.get(context).user.about;
     emailCont.text = UserCubit.get(context).user.email;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    nameCont.dispose();
+    aboutCont.dispose();
+    emailCont.dispose();
+    super.dispose();
   }
 
   @override
@@ -58,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       bottom: -10,
                       right: -10,
                       child: IconButton.filled(
-                        onPressed: () async{
+                        onPressed: () async {
                           String p = await pickProfilePic();
                           setState(() {
                             UserCubit.get(context).user.copyWith(image: p);
@@ -117,7 +126,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               AppButton(
                 text: 'Save',
                 function: () {
-                  Navigator.pop(context);
+                  if (nameCont.text.trim().isNotEmpty &&
+                      aboutCont.text.trim().isNotEmpty) {
+                    FireData()
+                        .editProfile(name: nameCont.text, about: aboutCont.text)
+                        .then(
+                      (value) {
+                        UserCubit.get(context).updateUser(
+                            name: nameCont.text, about: aboutCont.text);
+                        Navigator.pop(context);
+                      },
+                    );
+                  }
                 },
               ),
             ],

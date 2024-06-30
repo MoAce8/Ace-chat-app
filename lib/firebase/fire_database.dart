@@ -238,12 +238,11 @@ class FireData {
     required String groupId,
     required String member,
     required bool admin,
-  })async{
-    await fireStore
-        .collection('groups')
-        .doc(groupId)
-        .update({'members': FieldValue.arrayRemove([member])});
-    if(admin){
+  }) async {
+    await fireStore.collection('groups').doc(groupId).update({
+      'members': FieldValue.arrayRemove([member])
+    });
+    if (admin) {
       removeAdmin(groupId: groupId, member: member);
     }
   }
@@ -251,20 +250,28 @@ class FireData {
   Future addAdmin({
     required String groupId,
     required String member,
-  })async{
-    await fireStore
-        .collection('groups')
-        .doc(groupId)
-        .update({'admins': FieldValue.arrayUnion([member])});
+  }) async {
+    await fireStore.collection('groups').doc(groupId).update({
+      'admins': FieldValue.arrayUnion([member])
+    });
   }
 
   Future removeAdmin({
     required String groupId,
     required String member,
-  })async{
+  }) async {
+    await fireStore.collection('groups').doc(groupId).update({
+      'admins': FieldValue.arrayRemove([member])
+    });
+  }
+
+  Future editProfile({
+    required String name,
+    required String about,
+  }) async {
     await fireStore
-        .collection('groups')
-        .doc(groupId)
-        .update({'admins': FieldValue.arrayRemove([member])});
+        .collection('users')
+        .doc(myId)
+        .update({'name': name, 'about': about});
   }
 }
