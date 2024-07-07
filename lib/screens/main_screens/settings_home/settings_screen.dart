@@ -71,7 +71,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: 'Profile',
               icon: Icons.person,
               trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
+              onTap: (){
                 Navigator.push(
                     context,
                     MaterialPageRoute(

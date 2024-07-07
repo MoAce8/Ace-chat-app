@@ -12,6 +12,8 @@ class FireStorage {
     required File file,
     required String roomId,
     required String userId,
+    required String token,
+    required String sender,
   }) async {
     String ext = file.path.split('.').last;
 
@@ -23,7 +25,13 @@ class FireStorage {
 
     String imageUrl = await ref.getDownloadURL();
     FireData().sendMessage(
-        userId: userId, msg: imageUrl, roomId: roomId, type: 'image');
+      userId: userId,
+      msg: imageUrl,
+      roomId: roomId,
+      type: 'image',
+      token: token,
+      sender: sender,
+    );
   }
 
   sendGImage({

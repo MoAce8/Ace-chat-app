@@ -7,12 +7,19 @@ import 'package:image_picker/image_picker.dart';
 pickFromGallery({
   required String roomId,
   required String userId,
+  required String token,
+  required String sender,
 }) async {
   final ImagePicker picker = ImagePicker();
   XFile? file = await picker.pickImage(source: ImageSource.gallery);
   if (file != null) {
-    FireStorage()
-        .sendImage(file: File(file.path), roomId: roomId, userId: userId);
+    FireStorage().sendImage(
+      file: File(file.path),
+      roomId: roomId,
+      userId: userId,
+      token: token,
+      sender: sender,
+    );
   }
 }
 
@@ -38,7 +45,7 @@ Future<String> pickProfilePic() async {
   final ImagePicker picker = ImagePicker();
   XFile? file = await picker.pickImage(source: ImageSource.gallery);
   if (file != null) {
-    String path= await FireStorage().updateProfilePic(file: File(file.path));
+    String path = await FireStorage().updateProfilePic(file: File(file.path));
     return path;
   }
   return '';

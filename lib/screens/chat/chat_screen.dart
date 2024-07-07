@@ -1,3 +1,4 @@
+import 'package:ace_chat_app/cubit/user_cubit/user_cubit.dart';
 import 'package:ace_chat_app/firebase/fire_database.dart';
 import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/models/user_model.dart';
@@ -39,14 +40,13 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             widget.user.image.isNotEmpty
                 ? CircleAvatar(
-              backgroundImage: NetworkImage(widget.user.image),
-              radius: 18,
-            )
+                    backgroundImage: NetworkImage(widget.user.image),
+                    radius: 18,
+                  )
                 : const CircleAvatar(
-              backgroundImage:
-              AssetImage('assets/images/profile.png'),
-              radius: 18,
-            ),
+                    backgroundImage: AssetImage('assets/images/profile.png'),
+                    radius: 18,
+                  ),
             const SizedBox(
               width: 10,
             ),
@@ -145,9 +145,12 @@ class _ChatScreenState extends State<ChatScreen> {
                         : EmptyChat(
                             onTap: () {
                               FireData().sendMessage(
-                                  userId: widget.user.id,
-                                  msg: 'Hi 👋',
-                                  roomId: widget.roomId);
+                                userId: widget.user.id,
+                                msg: 'Hi 👋',
+                                roomId: widget.roomId,
+                                sender: UserCubit.get(context).user.name,
+                                token: widget.user.pushToken,
+                              );
                             },
                           );
                   } else {
@@ -166,7 +169,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       suffix: IconButton(
                         onPressed: () {
                           pickFromGallery(
-                              roomId: widget.roomId, userId: widget.user.id);
+                            roomId: widget.roomId,
+                            userId: widget.user.id,
+                            sender: UserCubit.get(context).user.name,
+                            token: widget.user.pushToken,
+                          );
                         },
                         icon: const Icon(Icons.attach_file),
                       ),
@@ -188,6 +195,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         userId: widget.user.id,
                         msg: messageCont.text.trim(),
                         roomId: widget.roomId,
+                        sender: UserCubit.get(context).user.name,
+                        token: widget.user.pushToken,
                       )
                           .then((value) {
                         messageCont.clear();

@@ -1,6 +1,7 @@
 import 'package:ace_chat_app/models/group_model.dart';
 import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/models/room_model.dart';
+import 'package:ace_chat_app/services/send_notification.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -65,6 +66,8 @@ class FireData {
     required String msg,
     required String roomId,
     String? type,
+    required String token,
+    required String sender,
   }) async {
     String msgId = const Uuid().v1();
     if (userId == myId) {
@@ -90,6 +93,12 @@ class FireData {
       'last_message': type ?? msg,
       'last_message_time': now,
     });
+
+    PushNotificationService().sendNotification(
+      token: token,
+      sender: sender,
+      msg: type ?? msg,
+    );
   }
 
   Future readMessages({
