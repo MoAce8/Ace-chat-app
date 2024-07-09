@@ -35,6 +35,7 @@ class PushNotificationService {
     required String token,
     required String sender,
     required String msg,
+    String? groupName,
   }) async {
     final String serverKey = await getAccessToken();
     String endpoint =
@@ -44,7 +45,7 @@ class PushNotificationService {
       'message': {
         'token': token,
         'notification': {
-          'title': sender,
+          'title': groupName == null? sender: '$groupName: $sender',
           'body': msg,
         },
         'data': {},

@@ -1,6 +1,7 @@
 import 'package:ace_chat_app/models/group_model.dart';
 import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/models/room_model.dart';
+import 'package:ace_chat_app/models/user_model.dart';
 import 'package:ace_chat_app/services/send_notification.dart';
 import 'package:ace_chat_app/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -172,7 +173,23 @@ class FireData {
     required String msg,
     required String groupId,
     String? type,
+    required List groupMembers,
+    required String sender,
+    required String gName,
   }) async {
+    List<UserModel> users = [];
+    groupMembers = groupMembers
+        .where(
+          (element) => element != myId,
+        )
+        .toList();
+    fireStore.collection('users').where('id', whereIn: groupMembers).get().then(
+          (value) => users.addAll(
+            value.docs.map(
+              (e) => UserModel.fromJson(e.data()),
+            ),
+          ),
+        );
     String msgId = const Uuid().v1();
     MessageModel newMessage = MessageModel(
       id: msgId,
@@ -194,6 +211,15 @@ class FireData {
       'last_message': type ?? msg,
       'last_message_time': now,
     });
+
+    for (var user in users) {
+      PushNotificationService().sendNotification(
+        token: user.pushToken,
+        sender: sender,
+        msg: type ?? msg,
+        groupName: gName,
+      );
+    }
   }
 
   Future deleteGroupMessage({

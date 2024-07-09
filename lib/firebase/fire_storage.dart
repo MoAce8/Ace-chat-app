@@ -37,6 +37,9 @@ class FireStorage {
   sendGImage({
     required File file,
     required String groupId,
+    required String sender,
+    required List groupMembers,
+    required String gName,
   }) async {
     String ext = file.path.split('.').last;
 
@@ -47,7 +50,14 @@ class FireStorage {
     await ref.putFile(file);
 
     String imageUrl = await ref.getDownloadURL();
-    FireData().sendGroupMessage(msg: imageUrl, groupId: groupId, type: 'image');
+    FireData().sendGroupMessage(
+      msg: imageUrl,
+      groupId: groupId,
+      type: 'image',
+      sender: sender,
+      groupMembers: groupMembers,
+      gName: gName,
+    );
   }
 
   Future<String> updateProfilePic({

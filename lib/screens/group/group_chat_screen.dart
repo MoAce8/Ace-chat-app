@@ -1,3 +1,4 @@
+import 'package:ace_chat_app/cubit/user_cubit/user_cubit.dart';
 import 'package:ace_chat_app/firebase/fire_database.dart';
 import 'package:ace_chat_app/models/group_model.dart';
 import 'package:ace_chat_app/models/message_model.dart';
@@ -46,14 +47,13 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
               children: [
                 widget.group.img.isNotEmpty
                     ? CircleAvatar(
-                  backgroundImage: NetworkImage(widget.group.img),
-                  radius: 18,
-                )
+                        backgroundImage: NetworkImage(widget.group.img),
+                        radius: 18,
+                      )
                     : const CircleAvatar(
-                  backgroundImage:
-                  AssetImage('assets/images/group.png'),
-                  radius: 18,
-                ),
+                        backgroundImage: AssetImage('assets/images/group.png'),
+                        radius: 18,
+                      ),
                 const SizedBox(
                   width: 10,
                 ),
@@ -79,7 +79,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                               users.add(item.data()['name']);
                             }
                             users.sort(
-                                  (a, b) =>
+                              (a, b) =>
                                   a.toLowerCase().compareTo(b.toLowerCase()),
                             );
                             return Text(
@@ -169,7 +169,12 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                         : EmptyChat(
                             onTap: () {
                               FireData().sendGroupMessage(
-                                  msg: 'Hi 👋', groupId: widget.group.id);
+                                msg: 'Hi 👋',
+                                groupId: widget.group.id,
+                                groupMembers: widget.group.members,
+                                sender: UserCubit.get(context).user.name,
+                                gName: widget.group.name,
+                              );
                             },
                           );
                   } else {
@@ -187,7 +192,12 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                       controller: messageCont,
                       suffix: IconButton(
                         onPressed: () {
-                          pickFromGalleryGroup(groupId: widget.group.id);
+                          pickFromGalleryGroup(
+                            groupId: widget.group.id,
+                            groupMembers: widget.group.members,
+                            sender: UserCubit.get(context).user.name,
+                            gName: widget.group.name,
+                          );
                         },
                         icon: const Icon(Icons.attach_file),
                       ),
@@ -208,6 +218,9 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                           .sendGroupMessage(
                         msg: messageCont.text.trim(),
                         groupId: widget.group.id,
+                        groupMembers: widget.group.members,
+                        sender: UserCubit.get(context).user.name,
+                        gName: widget.group.name,
                       )
                           .then((value) {
                         messageCont.clear();
