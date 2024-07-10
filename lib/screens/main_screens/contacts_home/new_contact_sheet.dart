@@ -53,6 +53,7 @@ class _NewContactSheetState extends State<NewContactSheet> {
             ),
             AppButton(
               text: 'Add Contact',
+              background: Theme.of(context).colorScheme.onPrimary,
               function: () {
                 if (emailController.text.isNotEmpty) {
                   FireData()

@@ -97,6 +97,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     actions: [
                       AppButton(
                           text: 'Done',
+                          background: Theme.of(context).colorScheme.onPrimary,
                           function: () {
                             Navigator.pop(context);
                           })

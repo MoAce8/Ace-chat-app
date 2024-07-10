@@ -94,6 +94,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   AppButton(
                       text: 'Sign Up',
+                      background: Theme.of(context).colorScheme.onPrimary,
                       function: () async {
                         if (formKey.currentState!.validate()) {
                           SignupCubit.get(context).createNewUser(

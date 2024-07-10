@@ -1,10 +1,9 @@
-import 'package:ace_chat_app/shared/constants.dart';
 import 'package:flutter/material.dart';
 
 class AppButton extends StatelessWidget {
   const AppButton({
     super.key,
-    this.background = kPrimaryColor,
+    required this.background,
     this.isUperCase = false,
     required this.text,
     required this.function,

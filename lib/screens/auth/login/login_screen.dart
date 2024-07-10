@@ -115,6 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   AppButton(
                       text: 'Login',
+                      background: Theme.of(context).colorScheme.onPrimary,
                       function: () async {
                         if (formKey.currentState!.validate()) {
                           LoginCubit.get(context).loginUser(

@@ -125,6 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               AppButton(
                 text: 'Save',
+                background: Theme.of(context).colorScheme.onPrimary,
                 function: () {
                   if (nameCont.text.trim().isNotEmpty &&
                       aboutCont.text.trim().isNotEmpty) {

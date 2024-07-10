@@ -1,7 +1,6 @@
 import 'package:ace_chat_app/models/group_model.dart';
 import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/screens/group/group_chat_screen.dart';
-import 'package:ace_chat_app/shared/constants.dart';
 import 'package:ace_chat_app/shared/date_time.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -70,9 +69,9 @@ class GroupCard extends StatelessWidget {
                     if (snapshot.hasData && unreadList!.isNotEmpty) {
                       return Container(
                         padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: kPrimaryColor,
+                          color: Theme.of(context).colorScheme.onPrimary,
                         ),
                         child: Text(unreadList.length.toString()),
                       );

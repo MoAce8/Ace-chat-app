@@ -35,7 +35,8 @@ class GroupChatBubble extends StatelessWidget {
           ),
           constraints: BoxConstraints(maxWidth: screenWidth(context) * .6),
           decoration: BoxDecoration(
-              color: isMe ? Colors.teal : kPrimaryColor,
+              color:
+                  isMe ? Colors.teal : Theme.of(context).colorScheme.onPrimary,
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(16),
                 topRight: const Radius.circular(16),
@@ -111,7 +112,7 @@ class GroupChatBubble extends StatelessWidget {
                           ],
                         )
                       : Text(
-                          '13:07',
+                          DateTimeFormatting.timeFormatter(msg.createdAt),
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                 ],

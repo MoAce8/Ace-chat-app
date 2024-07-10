@@ -52,6 +52,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               ),
               AppButton(
                   text: 'Send Email',
+                  background: Theme.of(context).colorScheme.onPrimary,
                   function: () async {
                     await FirebaseAuth.instance
                         .sendPasswordResetEmail(email: emailController.text)

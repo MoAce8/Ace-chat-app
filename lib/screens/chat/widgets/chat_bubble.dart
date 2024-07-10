@@ -48,7 +48,8 @@ class _ChatBubbleState extends State<ChatBubble> {
           ),
           constraints: BoxConstraints(maxWidth: screenWidth(context) * .6),
           decoration: BoxDecoration(
-              color: isMe ? Colors.teal : kPrimaryColor,
+              color:
+                  isMe ? Colors.teal : Theme.of(context).colorScheme.onPrimary,
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(16),
                 topRight: const Radius.circular(16),
@@ -85,7 +86,9 @@ class _ChatBubbleState extends State<ChatBubble> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          DateTimeFormatting.timeFormatter(widget.msg.createdAt),
+                          DateTimeFormatting.timeFormatter(
+                              widget.msg.createdAt,
+                          ),
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         const SizedBox(
@@ -100,7 +103,9 @@ class _ChatBubbleState extends State<ChatBubble> {
                       ],
                     )
                   : Text(
-                      '12:01',
+                      DateTimeFormatting.timeFormatter(
+                        widget.msg.createdAt,
+                      ),
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
             ],

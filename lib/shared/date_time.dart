@@ -1,14 +1,15 @@
 import 'package:intl/intl.dart';
 
 class DateTimeFormatting{
-  static String dateFormatter(String time){
+  static DateTime dateFormatter(String time){
     var date = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
-    return DateFormat('d/m/yy').format(date).toString();
+    // return DateFormat('d/m/yy').format(date);
+    return DateTime(date.year, date.month, date.day);
   }
 
   static String timeFormatter(String time){
     var date = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
-    return DateFormat.Hm().format(date).toString();
+    return DateFormat.Hm().format(date);
   }
 
   static String dateAndTime({required String time, required bool lastSeen,}){

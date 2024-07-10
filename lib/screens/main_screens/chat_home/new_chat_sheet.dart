@@ -53,6 +53,7 @@ class _NewChatSheetState extends State<NewChatSheet> {
             ),
             AppButton(
               text: 'Start Chat',
+              background: Theme.of(context).colorScheme.onPrimary,
               function: () {
                 if (emailController.text.isNotEmpty) {
                   FireData()
