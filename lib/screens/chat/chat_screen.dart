@@ -4,6 +4,7 @@ import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/models/user_model.dart';
 import 'package:ace_chat_app/screens/chat/widgets/messages_list.dart';
 import 'package:ace_chat_app/screens/chat/widgets/no_messages.dart';
+import 'package:ace_chat_app/shared/date_time.dart';
 import 'package:ace_chat_app/shared/image_picker.dart';
 import 'package:ace_chat_app/widgets/custom_text_field.dart';
 import 'package:ace_chat_app/widgets/loading_indicator.dart';
@@ -70,10 +71,11 @@ class _ChatScreenState extends State<ChatScreen> {
                         snapshot.hasData
                             ? snapshot.data!.data()!['online']
                                 ? 'online'
-                                : 'Last seen '
-                            : widget.user.lastSeen
-                        // '${DateTime.fromMillisecondsSinceEpoch(int.parse(widget.user.lastSeen)).toString()}'
-                        ,
+                                : 'Last seen ${DateTimeFormatting.dateAndTime(
+                                    time: snapshot.data!.data()!['last_seen'],
+                                    lastSeen: true,
+                                  )}'
+                            : widget.user.lastSeen,
                         style: Theme.of(context).textTheme.labelMedium,
                       );
                     }),

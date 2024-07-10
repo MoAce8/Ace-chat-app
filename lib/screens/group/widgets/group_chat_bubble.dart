@@ -1,5 +1,6 @@
 import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/shared/constants.dart';
+import 'package:ace_chat_app/shared/date_time.dart';
 import 'package:ace_chat_app/shared/photo_view.dart';
 import 'package:ace_chat_app/widgets/loading_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -95,9 +96,7 @@ class GroupChatBubble extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                      int.parse(msg.createdAt))
-                                  .toString(),
+                              DateTimeFormatting.timeFormatter(msg.createdAt),
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                             const SizedBox(

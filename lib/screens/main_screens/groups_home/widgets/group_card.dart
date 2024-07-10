@@ -2,6 +2,7 @@ import 'package:ace_chat_app/models/group_model.dart';
 import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/screens/group/group_chat_screen.dart';
 import 'package:ace_chat_app/shared/constants.dart';
+import 'package:ace_chat_app/shared/date_time.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ class GroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String lastMsgDate = DateTimeFormatting.dateAndTime(
+        time: group.lastMessageTime, lastSeen: false);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -45,9 +48,10 @@ class GroupCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(group.lastMessageTime))
-                    .toString(),
+                  lastMsgDate == 'today'
+                      ? DateTimeFormatting.timeFormatter(
+                      group.lastMessageTime)
+                      : lastMsgDate,
               ),
               StreamBuilder(
                   stream: FirebaseFirestore.instance

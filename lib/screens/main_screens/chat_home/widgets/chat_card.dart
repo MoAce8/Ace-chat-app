@@ -3,6 +3,7 @@ import 'package:ace_chat_app/models/room_model.dart';
 import 'package:ace_chat_app/models/user_model.dart';
 import 'package:ace_chat_app/screens/chat/chat_screen.dart';
 import 'package:ace_chat_app/shared/constants.dart';
+import 'package:ace_chat_app/shared/date_time.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,8 @@ class ChatCard extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             UserModel user = UserModel.fromJson(snapshot.data!.data());
+            String lastMsgDate = DateTimeFormatting.dateAndTime(
+                time: room.lastMessageTime, lastSeen: false);
             return GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -65,9 +68,10 @@ class ChatCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        DateTime.fromMillisecondsSinceEpoch(
-                                int.parse(room.lastMessageTime))
-                            .toString(),
+                        lastMsgDate == 'today'
+                            ? DateTimeFormatting.timeFormatter(
+                                room.lastMessageTime)
+                            : lastMsgDate,
                       ),
                       StreamBuilder(
                           stream: FirebaseFirestore.instance
