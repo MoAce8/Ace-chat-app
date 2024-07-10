@@ -1,5 +1,6 @@
 import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/shared/constants.dart';
+import 'package:ace_chat_app/shared/photo_view.dart';
 import 'package:ace_chat_app/widgets/loading_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -71,10 +72,19 @@ class GroupChatBubble extends StatelessWidget {
                           msg.msg,
                           style: Theme.of(context).textTheme.bodyLarge,
                         )
-                      : CachedNetworkImage(
-                          imageUrl: msg.msg,
-                          placeholder: (context, url) =>
-                              const LoadingIndicator(),
+                      : GestureDetector(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PhotoViewScreen(url: msg.msg),
+                            ),
+                          ),
+                          child: CachedNetworkImage(
+                            imageUrl: msg.msg,
+                            placeholder: (context, url) =>
+                                const LoadingIndicator(),
+                          ),
                         ),
                   const SizedBox(
                     height: 5,

@@ -1,6 +1,7 @@
 import 'package:ace_chat_app/firebase/fire_database.dart';
 import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/shared/constants.dart';
+import 'package:ace_chat_app/shared/photo_view.dart';
 import 'package:ace_chat_app/widgets/loading_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -61,9 +62,18 @@ class _ChatBubbleState extends State<ChatBubble> {
                       widget.msg.msg,
                       style: Theme.of(context).textTheme.bodyLarge,
                     )
-                  : CachedNetworkImage(
-                      imageUrl: widget.msg.msg,
-                      placeholder: (context, url) => const LoadingIndicator(),
+                  : GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PhotoViewScreen(url: widget.msg.msg),
+                        ),
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.msg.msg,
+                        placeholder: (context, url) => const LoadingIndicator(),
+                      ),
                     ),
               const SizedBox(
                 height: 5,
