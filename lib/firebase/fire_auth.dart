@@ -32,4 +32,11 @@ class FireAuth {
         .doc(currentUser.uid)
         .update({'push_token': token});
   }
+
+  Future updateOnline(bool online) async {
+    await fireStore.collection('users').doc(currentUser.uid).update({
+      'online': online,
+      'last_seen': DateTime.now().millisecondsSinceEpoch.toString(),
+    });
+  }
 }

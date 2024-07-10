@@ -60,12 +60,23 @@ class _ChatScreenState extends State<ChatScreen> {
                           ? widget.user.name
                           : '${widget.user.name.substring(0, 20)}...',
                 ),
-                Text(
-                  'Last seen '
-                  // '${DateTime.fromMillisecondsSinceEpoch(int.parse(widget.user.lastSeen)).toString()}'
-                  ,
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
+                StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(widget.user.id)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      return Text(
+                        snapshot.hasData
+                            ? snapshot.data!.data()!['online']
+                                ? 'online'
+                                : 'Last seen '
+                            : widget.user.lastSeen
+                        // '${DateTime.fromMillisecondsSinceEpoch(int.parse(widget.user.lastSeen)).toString()}'
+                        ,
+                        style: Theme.of(context).textTheme.labelMedium,
+                      );
+                    }),
               ],
             ),
           ],
