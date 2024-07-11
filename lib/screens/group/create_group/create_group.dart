@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:ace_chat_app/firebase/fire_database.dart';
 import 'package:ace_chat_app/models/user_model.dart';
+import 'package:ace_chat_app/shared/image_picker.dart';
 import 'package:ace_chat_app/widgets/custom_text_form_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +18,7 @@ class CreateGroupScreen extends StatefulWidget {
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
   TextEditingController gName = TextEditingController();
   List members = [];
+  String img = '';
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +35,18 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             Row(
               children: [
                 GestureDetector(
-                  onTap: () {},
-                  child: const CircleAvatar(
+                  onTap: () async {
+                    String temp = await pickWoSendGallery();
+                    setState(() {
+                      img = temp;
+                    });
+                  },
+                  child: CircleAvatar(
                     radius: 38,
+                    backgroundImage:
+                        img.isNotEmpty ? FileImage(File(img)) : null,
                     child: Icon(
-                      Icons.add_a_photo_outlined,
+                      img.isNotEmpty ? Icons.edit : Icons.add_a_photo_outlined,
                     ),
                   ),
                 ),
@@ -57,7 +68,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             const SizedBox(
               height: 18,
             ),
-             Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Members'),
@@ -121,7 +132,11 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               onPressed: () {
                 if (gName.text.trim().isNotEmpty) {
                   FireData()
-                      .createGroup(name: gName.text, members: members)
+                      .createGroup(
+                        name: gName.text,
+                        members: members,
+                        imgPath: img,
+                      )
                       .then((value) => Navigator.pop(context));
                 }
               },

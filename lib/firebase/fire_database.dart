@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:ace_chat_app/firebase/fire_storage.dart';
 import 'package:ace_chat_app/models/group_model.dart';
 import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/models/room_model.dart';
@@ -152,13 +155,21 @@ class FireData {
 
   ////////Group
 
-  Future createGroup({required String name, required List members}) async {
+  Future createGroup(
+      {required String name,
+      required List members,
+      required String imgPath}) async {
     members.add(myId);
     String groupId = const Uuid().v1();
+    String img = '';
+    if (imgPath.isNotEmpty) {
+      img = await FireStorage()
+          .updateGroupPic(file: File(imgPath), groupId: groupId, newG: true);
+    }
     GroupModel newGroup = GroupModel(
       id: groupId,
       name: name,
-      img: '',
+      img: img,
       members: members,
       admins: [myId],
       lastMessage: 'New group created',

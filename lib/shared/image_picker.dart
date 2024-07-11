@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:ace_chat_app/firebase/fire_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -59,13 +58,20 @@ Future<String> pickProfilePic({String? groupId}) async {
       path = await FireStorage().updateProfilePic(
         file: File(file.path),
       );
-    }else{
-      path = await FireStorage().updateGroupPic(
-        file: File(file.path),
-        groupId: groupId
-      );
+    } else {
+      path = await FireStorage()
+          .updateGroupPic(file: File(file.path), groupId: groupId);
     }
     return path;
+  }
+  return '';
+}
+
+Future<String> pickWoSendGallery() async {
+  final ImagePicker picker = ImagePicker();
+  XFile? file = await picker.pickImage(source: ImageSource.gallery);
+  if (file != null) {
+    return file.path;
   }
   return '';
 }

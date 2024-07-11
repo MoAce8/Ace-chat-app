@@ -85,6 +85,7 @@ class FireStorage {
   Future<String> updateGroupPic({
     required File file,
     required String groupId,
+    bool? newG,
   }) async {
     String ext = file.path.split('.').last;
 
@@ -95,10 +96,14 @@ class FireStorage {
 
     String imageUrl = await ref.getDownloadURL();
     print(imageUrl);
-    await FirebaseFirestore.instance
-        .collection('groups')
-        .doc(groupId)
-        .update({'image': imageUrl});
-    return imageUrl;
+    if (newG == null || !newG) {
+      await FirebaseFirestore.instance
+          .collection('groups')
+          .doc(groupId)
+          .update({'image': imageUrl});
+      return imageUrl;
+    }else{
+      return imageUrl;
+    }
   }
 }
