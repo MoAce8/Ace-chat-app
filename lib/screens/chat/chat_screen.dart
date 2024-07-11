@@ -2,6 +2,7 @@ import 'package:ace_chat_app/cubit/user_cubit/user_cubit.dart';
 import 'package:ace_chat_app/firebase/fire_database.dart';
 import 'package:ace_chat_app/models/message_model.dart';
 import 'package:ace_chat_app/models/user_model.dart';
+import 'package:ace_chat_app/screens/chat/user_details/user_details_screen.dart';
 import 'package:ace_chat_app/screens/chat/widgets/messages_list.dart';
 import 'package:ace_chat_app/screens/chat/widgets/no_messages.dart';
 import 'package:ace_chat_app/shared/date_time.dart';
@@ -37,51 +38,58 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            widget.user.image.isNotEmpty
-                ? CircleAvatar(
-                    backgroundImage: NetworkImage(widget.user.image),
-                    radius: 18,
-                  )
-                : const CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/profile.png'),
-                    radius: 18,
+        title: GestureDetector(
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UserDetailsScreen(user: widget.user),
+              )),
+          child: Row(
+            children: [
+              widget.user.image.isNotEmpty
+                  ? CircleAvatar(
+                      backgroundImage: NetworkImage(widget.user.image),
+                      radius: 18,
+                    )
+                  : const CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/profile.png'),
+                      radius: 18,
+                    ),
+              const SizedBox(
+                width: 10,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    ln > 10 && selectedMsg.isNotEmpty
+                        ? '${widget.user.name.substring(0, 10)}...'
+                        : ln <= 20
+                            ? widget.user.name
+                            : '${widget.user.name.substring(0, 20)}...',
                   ),
-            const SizedBox(
-              width: 10,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  ln > 10 && selectedMsg.isNotEmpty
-                      ? '${widget.user.name.substring(0, 10)}...'
-                      : ln <= 20
-                          ? widget.user.name
-                          : '${widget.user.name.substring(0, 20)}...',
-                ),
-                StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(widget.user.id)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      return Text(
-                        snapshot.hasData
-                            ? snapshot.data!.data()!['online']
-                                ? 'online'
-                                : 'Last seen ${DateTimeFormatting.dateAndTime(
-                                    time: snapshot.data!.data()!['last_seen'],
-                                    lastSeen: true,
-                                  )}'
-                            : widget.user.lastSeen,
-                        style: Theme.of(context).textTheme.labelMedium,
-                      );
-                    }),
-              ],
-            ),
-          ],
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(widget.user.id)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        return Text(
+                          snapshot.hasData
+                              ? snapshot.data!.data()!['online']
+                                  ? 'online'
+                                  : 'Last seen ${DateTimeFormatting.dateAndTime(
+                                      time: snapshot.data!.data()!['last_seen'],
+                                      lastSeen: true,
+                                    )}'
+                              : widget.user.lastSeen,
+                          style: Theme.of(context).textTheme.labelMedium,
+                        );
+                      }),
+                ],
+              ),
+            ],
+          ),
         ),
         actions: [
           selectedMsg.isNotEmpty
