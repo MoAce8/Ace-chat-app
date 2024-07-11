@@ -50,11 +50,21 @@ pickFromCamera() async {
   }
 }
 
-Future<String> pickProfilePic() async {
+Future<String> pickProfilePic({String? groupId}) async {
   final ImagePicker picker = ImagePicker();
   XFile? file = await picker.pickImage(source: ImageSource.gallery);
   if (file != null) {
-    String path = await FireStorage().updateProfilePic(file: File(file.path));
+    String path;
+    if (groupId == null) {
+      path = await FireStorage().updateProfilePic(
+        file: File(file.path),
+      );
+    }else{
+      path = await FireStorage().updateGroupPic(
+        file: File(file.path),
+        groupId: groupId
+      );
+    }
     return path;
   }
   return '';

@@ -1,6 +1,7 @@
 import 'package:ace_chat_app/firebase/fire_database.dart';
 import 'package:ace_chat_app/models/group_model.dart';
 import 'package:ace_chat_app/models/user_model.dart';
+import 'package:ace_chat_app/shared/image_picker.dart';
 import 'package:ace_chat_app/widgets/custom_text_form_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,11 +18,13 @@ class EditGroupScreen extends StatefulWidget {
 class _EditGroupScreenState extends State<EditGroupScreen> {
   TextEditingController gName = TextEditingController();
   List newMembers = [];
+  String img = '';
 
   @override
   void initState() {
     super.initState();
     gName.text = widget.group.name;
+    img = widget.group.img;
   }
 
   @override
@@ -39,13 +42,26 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
             Row(
               children: [
                 GestureDetector(
-                  onTap: () {},
-                  child: const CircleAvatar(
-                    radius: 38,
-                    child: Icon(
-                      Icons.add_a_photo_outlined,
-                    ),
-                  ),
+                  onTap: () async {
+                     String temp = await pickProfilePic(groupId: widget.group.id);
+                    setState(() {
+                      img = temp;
+                    });
+                  },
+                  child: img.isEmpty
+                      ? const CircleAvatar(
+                          radius: 38,
+                          child: Icon(
+                            Icons.add_a_photo_outlined,
+                          ),
+                        )
+                      : CircleAvatar(
+                          radius: 38,
+                          backgroundImage: NetworkImage(img),
+                          child: const Icon(
+                            Icons.edit,
+                          ),
+                        ),
                 ),
                 const SizedBox(
                   width: 16,

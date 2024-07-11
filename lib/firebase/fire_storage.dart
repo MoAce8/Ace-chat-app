@@ -81,4 +81,24 @@ class FireStorage {
         .update({'image': imageUrl});
     return imageUrl;
   }
+
+  Future<String> updateGroupPic({
+    required File file,
+    required String groupId,
+  }) async {
+    String ext = file.path.split('.').last;
+
+    final ref = fireStorage.ref().child(
+        'groups/$groupId/${DateTime.now().millisecondsSinceEpoch}.$ext');
+
+    await ref.putFile(file);
+
+    String imageUrl = await ref.getDownloadURL();
+    print(imageUrl);
+    await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId)
+        .update({'image': imageUrl});
+    return imageUrl;
+  }
 }
